@@ -1,0 +1,23 @@
+dev:
+  debug: false
+  version: 0.1
+  maintainer:
+    name: Théo Vidal
+    link: exybore@becauseofprog.fr
+bot:
+  name: 105quiz
+  id: 796098362704134204
+  illustration: https://cdn.discordapp.com/avatars/796098362704134204/c8be3850a1af4f797a5db90106b02857.png?size=128
+  website: https://github.com/theovidal/105quiz
+  prefix: "!"
+  color: 7976509
+categories:
+  default:
+    name: Non classé
+    emoji: x
+database:
+  address: localhost
+  port: 25450
+  database: exybore
+  auth_source: exybore
+assets:
