@@ -1,4 +1,4 @@
-module github.com/theovidal/105quiz
+module github.com/BecauseOfProg/xbop
 
 go 1.15
 
@@ -8,4 +8,4 @@ require (
 	golang.org/x/text v0.3.3
 )
 
-replace github.com/theovidal/onyxcord => ../onyxcord
+replace github.com/theovidal/onyxcord => ../../theovidal/onyxcord

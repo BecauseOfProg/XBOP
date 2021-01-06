@@ -3,9 +3,11 @@ package irregular_verbs
 import (
 	"context"
 	"fmt"
+
 	"github.com/bwmarrin/discordgo"
-	"github.com/theovidal/105quiz/lib"
 	"github.com/theovidal/onyxcord"
+
+	"github.com/BecauseOfProg/xbop/lib"
 )
 
 func HandleAnswer(bot *onyxcord.Bot, message *discordgo.Message, cacheID string) {

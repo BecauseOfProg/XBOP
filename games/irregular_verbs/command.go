@@ -2,13 +2,10 @@ package irregular_verbs
 
 import (
 	"context"
+
 	"github.com/bwmarrin/discordgo"
 	"github.com/theovidal/onyxcord"
-
-	"github.com/theovidal/105quiz/lib"
 )
-
-var VerbsPlayers lib.Players
 
 func Command() *onyxcord.Command {
 	return &onyxcord.Command{
