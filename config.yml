@@ -15,9 +15,6 @@ categories:
   default:
     name: Non classé
     emoji: x
-database:
+cache:
   address: localhost
-  port: 25450
-  database: exybore
-  auth_source: exybore
-assets:
+  port: 6379

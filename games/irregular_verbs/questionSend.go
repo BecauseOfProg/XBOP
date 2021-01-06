@@ -1,15 +1,17 @@
 package irregular_verbs
 
 import (
+	"context"
 	"fmt"
-	"github.com/theovidal/onyxcord"
 	"math/rand"
 	"time"
 
-	"github.com/theovidal/105quiz/lib"
+	"github.com/theovidal/onyxcord"
 )
 
-func SendQuestion(bot *onyxcord.Bot, player *lib.Client) {
+func SendQuestion(bot *onyxcord.Bot, channel string) {
+	cacheID := "verbs:" + channel
+
 	rand.Seed(time.Now().UnixNano())
 	row := rand.Intn(len(verbs))
 	questionColumn := rand.Intn(4)
@@ -21,12 +23,16 @@ func SendQuestion(bot *onyxcord.Bot, player *lib.Client) {
 
 	question := verbs[row][questionColumn]
 	verb := verbs[row][verbColumn]
-	player.Props["verb"] = verb
+	bot.Cache.HSet(context.Background(), cacheID, "verb", verb)
+	bot.Cache.HIncrBy(context.Background(), cacheID, "answers", 1)
+	bot.Cache.HSet(context.Background(), cacheID, "succeeded", "true")
 
-	player.Props["answers"] = player.Props["answers"].(int) + 1
-	player.Props["succeeded"] = true
 	bot.Client.ChannelMessageSend(
-		player.Context.ChannelID,
-		fmt.Sprintf("**#%d** `%s` - Indiquer %s", player.Props["answers"], question, categories[verbColumn]),
+		channel,
+		fmt.Sprintf(
+			"**#%s** `%s` - Indiquer %s",
+			bot.Cache.HGet(context.Background(), cacheID, "answers").Val(),
+			question,
+			categories[verbColumn]),
 	)
 }

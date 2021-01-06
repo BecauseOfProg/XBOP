@@ -1,6 +1,7 @@
 package irregular_verbs
 
 import (
+	"context"
 	"github.com/bwmarrin/discordgo"
 	"github.com/theovidal/onyxcord"
 
@@ -16,13 +17,13 @@ func Command() *onyxcord.Command {
 		ListenInPublic: true,
 		ListenInDM:     true,
 		Execute: func(arguments []string, bot onyxcord.Bot, message *discordgo.MessageCreate) (err error) {
-			player := lib.NewClient(message)
-			player.Props["answers"] = 0
-			player.Props["successfulAnswers"] = 0
-			VerbsPlayers.AddPlayer(&player)
+			bot.Cache.HMSet(context.Background(), "verbs:"+message.ChannelID,
+				"answers", 0,
+				"successfulAnswers", 0,
+			)
 
 			bot.Client.ChannelMessageSend(message.ChannelID, ":flag_gb: **Quiz sur les verbes irréguliers**")
-			SendQuestion(&bot, &player)
+			SendQuestion(&bot, message.ChannelID)
 
 			return
 		},
