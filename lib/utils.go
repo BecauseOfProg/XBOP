@@ -1,4 +1,4 @@
-package commands
+package lib
 
 import (
 	"log"
@@ -11,9 +11,9 @@ import (
 	"golang.org/x/text/unicode/norm"
 )
 
-func trimNonLetters(input string) (output string) {
+func TrimNonLetters(input string) (output string) {
 	output = strings.ToLower(input)
-	output = trimAccents(input)
+	output = TrimAccents(output)
 
 	regex := regexp.MustCompile(`[^a-z]`)
 	output = string(regex.ReplaceAll([]byte(output), []byte{}))
@@ -21,7 +21,7 @@ func trimNonLetters(input string) (output string) {
 	return
 }
 
-func trimAccents(input string) string {
+func TrimAccents(input string) string {
 	transformer := transform.Chain(norm.NFD, runes.Remove(runes.In(unicode.Mn)), norm.NFC)
 	output, _, err := transform.String(transformer, input)
 	if err != nil {
@@ -32,7 +32,7 @@ func trimAccents(input string) string {
 }
 
 // Checks if a specific slice contains a string
-func contains(slice []string, text string) bool {
+func Contains(slice []string, text string) bool {
 	for _, item := range slice {
 		if item == text {
 			return true
