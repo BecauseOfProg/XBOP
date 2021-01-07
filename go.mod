@@ -7,3 +7,5 @@ require (
 	github.com/theovidal/onyxcord v0.1.0
 	golang.org/x/text v0.3.3
 )
+
+replace github.com/theovidal/onyxcord => ../../theovidal/onyxcord

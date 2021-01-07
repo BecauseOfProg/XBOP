@@ -10,6 +10,7 @@ import (
 func Command() *onyxcord.Command {
 	return &onyxcord.Command{
 		Description:    "Lancer un quiz sur les verbes irréguliers en anglais",
+		Category:       "quizzes",
 		Show:           true,
 		ListenInPublic: true,
 		ListenInDM:     true,
