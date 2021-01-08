@@ -17,7 +17,7 @@ func HandleAnswer(bot *onyxcord.Bot, message *discordgo.Message, cacheID string)
 	trial := lib.TrimNonLetters(message.Content)
 	verb := bot.Cache.HGet(context.Background(), cacheID, "verb").Val()
 
-	if lib.Contains(stopSentences, trial) {
+	if lib.Contains(lib.StopSentences, trial) {
 		bot.Cache.HIncrBy(context.Background(), cacheID, "answers", -1)
 		successfulAnswers, _ := bot.Cache.HGet(context.Background(), cacheID, "successfulAnswers").Int()
 		answers, _ := bot.Cache.HGet(context.Background(), cacheID, "answers").Int()
@@ -35,7 +35,7 @@ func HandleAnswer(bot *onyxcord.Bot, message *discordgo.Message, cacheID string)
 		return
 	}
 
-	if lib.Contains(skipSentences, trial) {
+	if lib.Contains(lib.SkipSentences, trial) {
 		bot.Client.ChannelMessageSend(
 			message.ChannelID,
 			fmt.Sprintf(":fast_forward: Le mot recherché était **%s**", verb),

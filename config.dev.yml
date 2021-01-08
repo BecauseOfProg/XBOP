@@ -15,6 +15,9 @@ categories:
   default:
     name: Utilitaires
     emoji: wrench
+  classic:
+    name: Classiques
+    emoji: game_die
   quizzes:
     name: Quizzes
     emoji: question

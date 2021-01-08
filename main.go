@@ -6,6 +6,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/theovidal/onyxcord"
 
+	"github.com/BecauseOfProg/xbop/games/hangman"
 	"github.com/BecauseOfProg/xbop/games/irregular_verbs"
 )
 
@@ -13,6 +14,7 @@ func main() {
 	bot := onyxcord.RegisterBot("XBOP", false)
 
 	bot.RegisterCommand("verbs", irregular_verbs.Command())
+	bot.RegisterCommand("hangman", hangman.Command())
 
 	bot.Client.AddHandler(func(session *discordgo.Session, event *discordgo.Event) {
 		if event.Type == "INTERACTION_CREATE" {
@@ -33,6 +35,7 @@ func main() {
 	})
 
 	bot.Client.AddHandler(func(session *discordgo.Session, message *discordgo.MessageCreate) {
+		hangman.HandleInteraction(&bot, message.Message)
 		irregular_verbs.HandleInteraction(&bot, message.Message)
 		bot.OnCommand(session, message)
 	})
