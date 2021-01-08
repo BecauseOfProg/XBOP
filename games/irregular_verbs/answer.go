@@ -10,7 +10,7 @@ import (
 	"github.com/BecauseOfProg/xbop/lib"
 )
 
-func HandleAnswer(bot *onyxcord.Bot, message *discordgo.Message, cacheID string) {
+func handleAnswer(bot *onyxcord.Bot, message *discordgo.Message, cacheID string) {
 	if message.Author.Bot {
 		return
 	}
@@ -40,7 +40,7 @@ func HandleAnswer(bot *onyxcord.Bot, message *discordgo.Message, cacheID string)
 			message.ChannelID,
 			fmt.Sprintf(":fast_forward: Le mot recherché était **%s**", verb),
 		)
-		SendQuestion(bot, message.ChannelID)
+		sendQuestion(bot, message.ChannelID)
 		return
 	}
 
@@ -49,7 +49,7 @@ func HandleAnswer(bot *onyxcord.Bot, message *discordgo.Message, cacheID string)
 		if bot.Cache.HGet(context.Background(), cacheID, "succeeded").Val() == "true" {
 			bot.Cache.HIncrBy(context.Background(), cacheID, "successfulAnswers", 1)
 		}
-		SendQuestion(bot, message.ChannelID)
+		sendQuestion(bot, message.ChannelID)
 	} else {
 		bot.Client.MessageReactionAdd(message.ChannelID, message.ID, "❌")
 		bot.Cache.HSet(context.Background(), cacheID, "suceeded", "false")

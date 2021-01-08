@@ -11,7 +11,7 @@ import (
 	"github.com/BecauseOfProg/xbop/lib"
 )
 
-func Try(bot *onyxcord.Bot, message *discordgo.Message, cacheID string) {
+func handleAttempt(bot *onyxcord.Bot, message *discordgo.Message, cacheID string) {
 	word := bot.Cache.HGet(context.Background(), cacheID, "word").Val()
 	if lib.Contains(lib.StopSentences, lib.TrimNonLetters(message.Content)) {
 		bot.Cache.Del(context.Background(), cacheID)
@@ -22,7 +22,7 @@ func Try(bot *onyxcord.Bot, message *discordgo.Message, cacheID string) {
 		return
 	}
 
-	trialLetter := strings.ToUpper(string(message.Content[0]))
+	attemptLetter := strings.ToUpper(string(message.Content[0]))
 	bot.Client.ChannelMessageDelete(message.ChannelID, message.ID)
 
 	letters := bot.Cache.HGet(context.Background(), cacheID, "letters").Val()
@@ -30,17 +30,17 @@ func Try(bot *onyxcord.Bot, message *discordgo.Message, cacheID string) {
 	gameMessage := bot.Cache.HGet(context.Background(), cacheID, "message").Val()
 	maxErrors, _ := bot.Cache.HGet(context.Background(), cacheID, "maxErrors").Int()
 
-	if strings.Contains(falseLetters+letters, trialLetter) {
+	if strings.Contains(falseLetters+letters, attemptLetter) {
 		return
 	}
 
 	currentWord := hideWord(word, letters)
-	trialWord := hideWord(word, letters+trialLetter)
+	attemptWord := hideWord(word, letters+attemptLetter)
 
-	if currentWord == trialWord {
-		falseLetters += trialLetter
+	if currentWord == attemptWord {
+		falseLetters += attemptLetter
 	} else {
-		letters += trialLetter
+		letters += attemptLetter
 	}
 
 	if len(falseLetters) >= maxErrors {
@@ -54,7 +54,7 @@ func Try(bot *onyxcord.Bot, message *discordgo.Message, cacheID string) {
 
 	bot.Client.ChannelMessageEdit(message.ChannelID, gameMessage, formatMessage(word, letters, falseLetters, maxErrors))
 
-	if trialWord == word {
+	if attemptWord == word {
 		bot.Cache.Del(context.Background(), cacheID)
 		bot.Client.ChannelMessageSend(
 			message.ChannelID,

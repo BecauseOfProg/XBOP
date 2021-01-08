@@ -15,6 +15,7 @@ import (
 func Command() *onyxcord.Command {
 	return &onyxcord.Command{
 		Description:    "Lancer une partie de pendu",
+		Usage:          "hangman <max_errors:int>",
 		Category:       "classic",
 		Show:           true,
 		ListenInPublic: true,

@@ -2,21 +2,8 @@ package hangman
 
 import (
 	"fmt"
-	"io/ioutil"
-	"log"
 	"regexp"
-	"strings"
 )
-
-var words = openWords()
-
-func openWords() []string {
-	content, err := ioutil.ReadFile("assets/wordslist_fr.txt")
-	if err != nil {
-		log.Panicf("‼ Error opening words list for hangman: %s", err.Error())
-	}
-	return strings.Split(string(content), "\n")
-}
 
 func hideWord(word string, letters string) string {
 	regex := regexp.MustCompile(fmt.Sprintf("[^%c%s]", word[0], letters))

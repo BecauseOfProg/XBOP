@@ -9,7 +9,7 @@ import (
 	"github.com/theovidal/onyxcord"
 )
 
-func SendQuestion(bot *onyxcord.Bot, channel string) {
+func sendQuestion(bot *onyxcord.Bot, channel string) {
 	cacheID := "verbs:" + channel
 
 	rand.Seed(time.Now().UnixNano())

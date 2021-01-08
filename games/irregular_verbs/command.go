@@ -21,7 +21,7 @@ func Command() *onyxcord.Command {
 			)
 
 			bot.Client.ChannelMessageSend(message.ChannelID, ":flag_gb: **Quiz sur les verbes irréguliers**")
-			SendQuestion(&bot, message.ChannelID)
+			sendQuestion(&bot, message.ChannelID)
 
 			return
 		},
