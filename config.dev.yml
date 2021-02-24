@@ -9,18 +9,7 @@ bot:
   id: 796796572134015018
   illustration: https://cdn.discordapp.com/avatars/796796572134015018/4a600173aa979c7485ef2d3b193449a0.png?size=256
   website: https://github.com/BecauseOfProg/XBOP
-  prefix: "!nx "
   color: 6313215
-categories:
-  default:
-    name: Utilitaires
-    emoji: wrench
-  classic:
-    name: Classiques
-    emoji: game_die
-  quizzes:
-    name: Quizzes
-    emoji: question
 cache:
   address: localhost
   port: 6379

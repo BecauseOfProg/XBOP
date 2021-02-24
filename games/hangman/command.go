@@ -2,9 +2,7 @@ package hangman
 
 import (
 	"context"
-	"errors"
 	"math/rand"
-	"strconv"
 	"strings"
 	"time"
 
@@ -14,30 +12,30 @@ import (
 
 func Command() *onyxcord.Command {
 	return &onyxcord.Command{
-		Description:    "Lancer une partie de pendu",
-		Usage:          "hangman <max_errors:int>",
-		Category:       "classic",
-		Show:           true,
 		ListenInPublic: true,
 		ListenInDM:     true,
-		Execute: func(arguments []string, bot onyxcord.Bot, message *discordgo.MessageCreate) (err error) {
+		Execute: func(bot *onyxcord.Bot, interaction *discordgo.InteractionCreate) (err error) {
 			rand.Seed(time.Now().UnixNano())
 			word := strings.TrimRight(words[rand.Intn(len(words))], "\r")
 
 			var maxErrors int
-			if arguments[0] == "" {
+			if len(interaction.Data.Options) == 0 {
 				maxErrors = 7
 			} else {
-				maxErrors, err = strconv.Atoi(arguments[0])
-				if err != nil || maxErrors < 1 {
-					return errors.New("Le nombre d'erreurs doit être un nombre entier supérieur à 0")
-				}
+				maxErrors = int(interaction.Data.Options[0].IntValue())
 			}
 
-			letters := string(word[0])
-			game, _ := bot.Client.ChannelMessageSend(message.ChannelID, formatMessage(word, letters, "", maxErrors))
+			_ = bot.Client.InteractionRespond(interaction.Interaction, &discordgo.InteractionResponse{
+				Type: discordgo.InteractionResponseChannelMessageWithSource,
+				Data: &discordgo.InteractionApplicationCommandResponseData{
+					Content: "**:chains: Et c'est parti pour un jeu du pendu !**\n*Astuce : tous les utilisateurs ayant accès au salon peuvent participer. Pour arrêter la partie, envoyez `stop`.*",
+				},
+			})
 
-			bot.Cache.HMSet(context.Background(), "hangman:"+message.ChannelID,
+			letters := string(word[0])
+			game, _ := bot.Client.ChannelMessageSend(interaction.ChannelID, formatMessage(word, letters, "", maxErrors))
+
+			bot.Cache.HMSet(context.Background(), "hangman:"+interaction.ChannelID,
 				"word", word,
 				"letters", letters,
 				"falseLetters", "",

@@ -43,6 +43,8 @@ func handleAttempt(bot *onyxcord.Bot, message *discordgo.Message, cacheID string
 		letters += attemptLetter
 	}
 
+	bot.Client.ChannelMessageEdit(message.ChannelID, gameMessage, formatMessage(word, letters, falseLetters, maxErrors))
+
 	if len(falseLetters) >= maxErrors {
 		bot.Cache.Del(context.Background(), cacheID)
 		bot.Client.ChannelMessageSend(
@@ -51,9 +53,6 @@ func handleAttempt(bot *onyxcord.Bot, message *discordgo.Message, cacheID string
 		)
 		return
 	}
-
-	bot.Client.ChannelMessageEdit(message.ChannelID, gameMessage, formatMessage(word, letters, falseLetters, maxErrors))
-
 	if attemptWord == word {
 		bot.Cache.Del(context.Background(), cacheID)
 		bot.Client.ChannelMessageSend(

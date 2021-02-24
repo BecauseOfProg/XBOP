@@ -9,19 +9,15 @@ import (
 
 func Command() *onyxcord.Command {
 	return &onyxcord.Command{
-		Description:    "Lancer un quiz sur les verbes irréguliers en anglais",
-		Category:       "quizzes",
-		Show:           true,
 		ListenInPublic: true,
 		ListenInDM:     true,
-		Execute: func(arguments []string, bot onyxcord.Bot, message *discordgo.MessageCreate) (err error) {
-			bot.Cache.HMSet(context.Background(), "verbs:"+message.ChannelID,
+		Execute: func(bot *onyxcord.Bot, interaction *discordgo.InteractionCreate) (err error) {
+			bot.Cache.HMSet(context.Background(), "verbs:"+interaction.ChannelID,
 				"answers", 0,
 				"successfulAnswers", 0,
 			)
 
-			bot.Client.ChannelMessageSend(message.ChannelID, ":flag_gb: **Quiz sur les verbes irréguliers**")
-			sendQuestion(&bot, message.ChannelID)
+			sendQuestion(bot, interaction.ChannelID)
 
 			return
 		},
