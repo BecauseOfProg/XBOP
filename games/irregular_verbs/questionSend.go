@@ -11,9 +11,10 @@ import (
 
 func sendQuestion(bot *onyxcord.Bot, channel string) {
 	cacheID := "verbs:" + channel
+	part := bot.Cache.HGet(context.Background(), cacheID, "part").Val()
 
 	rand.Seed(time.Now().UnixNano())
-	row := rand.Intn(len(verbs))
+	row := rand.Intn(len(verbs[part]))
 	questionColumn := rand.Intn(4)
 	verbColumn := questionColumn
 
@@ -21,8 +22,8 @@ func sendQuestion(bot *onyxcord.Bot, channel string) {
 		verbColumn = rand.Intn(4)
 	}
 
-	question := verbs[row][questionColumn]
-	verb := verbs[row][verbColumn]
+	question := verbs[part][row][questionColumn]
+	verb := verbs[part][row][verbColumn]
 	bot.Cache.HSet(context.Background(), cacheID, "verb", verb)
 	bot.Cache.HIncrBy(context.Background(), cacheID, "answers", 1)
 	bot.Cache.HSet(context.Background(), cacheID, "succeeded", "true")

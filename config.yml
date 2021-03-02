@@ -10,6 +10,7 @@ bot:
   illustration: https://cdn.discordapp.com/app-icons/796457702666534972/88a99cba60ccf586d54a1d38f450e8f9.png?size=256
   website: https://github.com/BecauseOfProg/XBOP
   color: 16750457
+  error_color: 12000284
 cache:
   address: localhost
   port: 6379
