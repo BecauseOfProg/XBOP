@@ -1,14 +1,17 @@
 dev:
   debug: false
-  version: 0.1.1
+  version: 0.1.2
   maintainer:
     name: Théo Vidal
-    link: exybore@becauseofprog.fr
+    link: https://github.com/theovidal
 bot:
   name: XBOP-NX
   id: 796796572134015018
   illustration: https://cdn.discordapp.com/avatars/796796572134015018/4a600173aa979c7485ef2d3b193449a0.png?size=256
   website: https://github.com/BecauseOfProg/XBOP
+  invite_link: https://discord.com/oauth2/authorize?client_id=796457702666534972&permissions=3136&redirect_uri=https%3A%2F%2Fbecauseofprog.fr&response_type=code&scope=bot%20applications.commands%20applications.commands.update
+  license: https://github.com/BecauseOfProg/XBOP/blob/main/LICENSE
+  donate: https://www.buymeacoffee.com/theovidal
   color: 6313215
   error_color: 12000284
 cache:
