@@ -7,9 +7,9 @@ import (
 	"github.com/theovidal/onyxcord"
 )
 
-func HandleInteraction(bot *onyxcord.Bot, message *discordgo.Message) {
+func HandleOngoingGame(bot *onyxcord.Bot, message *discordgo.Message) {
 	connectFourPlayer := bot.Cache.Exists(context.Background(), "connectfour:"+message.ChannelID).Val()
 	if connectFourPlayer == 1 {
-		handlePlay(bot, message, "connectfour:"+message.ChannelID)
+		handleTurn(bot, message, "connectfour:"+message.ChannelID)
 	}
 }

@@ -7,7 +7,7 @@ import (
 	"github.com/theovidal/onyxcord"
 )
 
-func HandleInteraction(bot *onyxcord.Bot, message *discordgo.Message) {
+func HandleOngoingGame(bot *onyxcord.Bot, message *discordgo.Message) {
 	hangmanPlayer := bot.Cache.Exists(context.Background(), "hangman:"+message.ChannelID).Val()
 	if hangmanPlayer == 1 {
 		handleAttempt(bot, message, "hangman:"+message.ChannelID)

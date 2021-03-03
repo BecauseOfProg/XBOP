@@ -2,7 +2,7 @@ package main
 
 import "github.com/bwmarrin/discordgo"
 
-func commands() []*discordgo.ApplicationCommand {
+func DiscordCommands() []*discordgo.ApplicationCommand {
 	return []*discordgo.ApplicationCommand{
 		{
 			Name:        "connect-four",

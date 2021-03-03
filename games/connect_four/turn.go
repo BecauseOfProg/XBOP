@@ -12,7 +12,7 @@ import (
 	"github.com/BecauseOfProg/xbop/lib"
 )
 
-func handlePlay(bot *onyxcord.Bot, message *discordgo.Message, cacheID string) {
+func handleTurn(bot *onyxcord.Bot, message *discordgo.Message, cacheID string) {
 	turn := bot.Cache.HGet(context.Background(), cacheID, "turn").Val()
 	player := bot.Cache.HGet(context.Background(), cacheID, turn).Val()
 

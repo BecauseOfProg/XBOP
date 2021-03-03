@@ -7,7 +7,7 @@ import (
 	"github.com/theovidal/onyxcord"
 )
 
-func HandleInteraction(bot *onyxcord.Bot, message *discordgo.Message) {
+func HandleOngoingGame(bot *onyxcord.Bot, message *discordgo.Message) {
 	verbsPlayer := bot.Cache.Exists(context.Background(), "verbs:"+message.ChannelID).Val()
 	if verbsPlayer == 1 {
 		handleAnswer(bot, message, "verbs:"+message.ChannelID)
