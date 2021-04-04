@@ -17,7 +17,7 @@ func Command() *onyxcord.Command {
 			err = bot.Client.InteractionRespond(interaction.Interaction, &discordgo.InteractionResponse{
 				Type: discordgo.InteractionResponseChannelMessageWithSource,
 				Data: &discordgo.InteractionApplicationCommandResponseData{
-					Content: fmt.Sprintf("**:red_circle: %s affronte désormais :yellow_circle: %s au Puissance 4!**", player1.Mention(), player2.Mention()),
+					Content: fmt.Sprintf("**:red_circle: %s affronte désormais :yellow_circle: %s au Puissance 4!**\nLorsque c'est à vous de jouer, indiquez le numéro de la colonne dans laquelle mettre votre jeton.\nPour arrêter la partie, envoyez `stop`.", player1.Mention(), player2.Mention()),
 				},
 			})
 			if err != nil {

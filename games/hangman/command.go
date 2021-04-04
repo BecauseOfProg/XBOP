@@ -28,7 +28,7 @@ func Command() *onyxcord.Command {
 			_ = bot.Client.InteractionRespond(interaction.Interaction, &discordgo.InteractionResponse{
 				Type: discordgo.InteractionResponseChannelMessageWithSource,
 				Data: &discordgo.InteractionApplicationCommandResponseData{
-					Content: "**:chains: Et c'est parti pour un jeu du pendu !**\n*Astuce : tous les utilisateurs ayant accès au salon peuvent participer. Pour arrêter la partie, envoyez `stop`.*",
+					Content: "**:chains: Et c'est parti pour un jeu du pendu !**\nTous les utilisateurs ayant accès au salon peuvent participer.\nPour arrêter la partie, envoyez `stop`.",
 				},
 			})
 
