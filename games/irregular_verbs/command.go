@@ -19,15 +19,16 @@ func Command() *onyxcord.Command {
 		ListenInDM:     true,
 		Execute: func(bot *onyxcord.Bot, interaction *discordgo.InteractionCreate) (err error) {
 			var part string
-			if len(interaction.Data.Options) < 1 {
+			options := interaction.ApplicationCommandData().Options
+			if len(options) < 1 {
 				part = "all"
 			} else {
-				part = interaction.Data.Options[0].StringValue()
+				part = options[0].StringValue()
 			}
 
 			err = bot.Client.InteractionRespond(interaction.Interaction, &discordgo.InteractionResponse{
 				Type: discordgo.InteractionResponseChannelMessageWithSource,
-				Data: &discordgo.InteractionApplicationCommandResponseData{
+				Data: &discordgo.InteractionResponseData{
 					Content: fmt.Sprintf(
 						":flag_gb: **Quiz sur les verbes irréguliers** - %s\nTous les utilisateurs ayant accès au salon peuvent participer.",
 						parts[part],

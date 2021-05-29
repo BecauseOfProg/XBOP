@@ -3,7 +3,18 @@ package hangman
 import (
 	"fmt"
 	"regexp"
+
+	"github.com/bwmarrin/discordgo"
 )
+
+func stopButton(disabled bool) discordgo.Button {
+	return discordgo.Button{
+		Label:    "Arrêter la partie",
+		Style:    discordgo.DangerButton,
+		CustomID: "hangman_stop",
+		Disabled: disabled,
+	}
+}
 
 func hideWord(word string, letters string) string {
 	regex := regexp.MustCompile(fmt.Sprintf("[^%c%s]", word[0], letters))

@@ -12,13 +12,17 @@ import (
 
 func main() {
 	bot := onyxcord.RegisterBot("XBOP")
+	bot.Commands = map[string]*onyxcord.Command{
+		"verbs":        irregular_verbs.Command(),
+		"connect-four": connect_four.Command(),
+		"hangman":      hangman.Command(),
+		"about":        commands.About(),
+	}
 
-	bot.RegisterCommand("verbs", irregular_verbs.Command())
-
-	bot.RegisterCommand("connect-four", connect_four.Command())
-	bot.RegisterCommand("hangman", hangman.Command())
-
-	bot.RegisterCommand("about", commands.About())
+	bot.Components = map[string]onyxcord.Component{
+		"connectfour_stop": connect_four.StopGame,
+		"hangman_stop":     hangman.StopGame,
+	}
 
 	bot.Client.AddHandler(func(session *discordgo.Session, message *discordgo.MessageCreate) {
 		connect_four.HandleOngoingGame(&bot, message.Message)

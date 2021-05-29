@@ -31,7 +31,7 @@ func TrimAccents(input string) string {
 	return output
 }
 
-// Checks if a specific slice contains a string
+// Contains checks if a specific slice contains a string
 func Contains(slice []string, text string) bool {
 	for _, item := range slice {
 		if item == text {

@@ -2,10 +2,20 @@ package connect_four
 
 import (
 	"fmt"
+	"strconv"
+
 	"github.com/bwmarrin/discordgo"
 	"github.com/theovidal/onyxcord"
-	"strconv"
 )
+
+func stopButton(disabled bool) discordgo.Button {
+	return discordgo.Button{
+		Label:    "Arrêter la partie",
+		Style:    discordgo.DangerButton,
+		CustomID: "connectfour_stop",
+		Disabled: disabled,
+	}
+}
 
 func generateGrid(rows []string) string {
 	var output string

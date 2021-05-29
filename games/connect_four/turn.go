@@ -2,29 +2,18 @@ package connect_four
 
 import (
 	"context"
-	"fmt"
 	"strconv"
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/theovidal/onyxcord"
-
-	"github.com/BecauseOfProg/xbop/lib"
 )
 
 func handleTurn(bot *onyxcord.Bot, message *discordgo.Message, cacheID string) {
 	turn := bot.Cache.HGet(context.Background(), cacheID, "turn").Val()
 	player := bot.Cache.HGet(context.Background(), cacheID, turn).Val()
 
-	if lib.Contains(lib.StopSentences, lib.TrimNonLetters(message.Content)) {
-		bot.Client.ChannelMessageSend(
-			message.ChannelID,
-			fmt.Sprintf("**:stop_sign: Arrêt de la partie prononcé par %s**", message.Author.Mention()),
-		)
-		bot.Cache.Del(context.Background(), cacheID, cacheID+"/grid")
-		return
-	}
-	if message.Author.Bot || player != message.Author.ID {
+	if message.Author.Bot || player != message.Author.ID || message.Content[0] == '!' {
 		return
 	}
 

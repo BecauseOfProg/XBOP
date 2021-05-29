@@ -7,20 +7,13 @@ import (
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/theovidal/onyxcord"
-
-	"github.com/BecauseOfProg/xbop/lib"
 )
 
 func handleAttempt(bot *onyxcord.Bot, message *discordgo.Message, cacheID string) {
-	word := bot.Cache.HGet(context.Background(), cacheID, "word").Val()
-	if lib.Contains(lib.StopSentences, lib.TrimNonLetters(message.Content)) {
-		bot.Cache.Del(context.Background(), cacheID)
-		bot.Client.ChannelMessageSend(
-			message.ChannelID,
-			fmt.Sprintf("**:stop_sign: Arrêt de la partie prononcé.**\n\nLe mot à trouver était **%s**.", word),
-		)
+	if message.Content[0] == '!' {
 		return
 	}
+	word := bot.Cache.HGet(context.Background(), cacheID, "word").Val()
 
 	attemptLetter := strings.ToUpper(string(message.Content[0]))
 	bot.Client.ChannelMessageDelete(message.ChannelID, message.ID)

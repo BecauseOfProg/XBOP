@@ -19,16 +19,24 @@ func Command() *onyxcord.Command {
 			word := strings.TrimRight(words[rand.Intn(len(words))], "\r")
 
 			var maxErrors int
-			if len(interaction.Data.Options) == 0 {
+			options := interaction.ApplicationCommandData().Options
+			if len(options) == 0 {
 				maxErrors = 7
 			} else {
-				maxErrors = int(interaction.Data.Options[0].IntValue())
+				maxErrors = int(options[0].IntValue())
 			}
 
 			_ = bot.Client.InteractionRespond(interaction.Interaction, &discordgo.InteractionResponse{
 				Type: discordgo.InteractionResponseChannelMessageWithSource,
-				Data: &discordgo.InteractionApplicationCommandResponseData{
-					Content: "**:chains: Et c'est parti pour un jeu du pendu !**\nTous les utilisateurs ayant accès au salon peuvent participer.\nPour arrêter la partie, envoyez `stop`.",
+				Data: &discordgo.InteractionResponseData{
+					Content: "**:chains: Et c'est parti pour un jeu du pendu !**\nTous les utilisateurs ayant accès au salon peuvent participer.",
+					Components: []discordgo.MessageComponent{
+						discordgo.ActionsRow{
+							Components: []discordgo.MessageComponent{
+								stopButton(false),
+							},
+						},
+					},
 				},
 			})
 

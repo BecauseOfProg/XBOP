@@ -13,7 +13,7 @@ func About() *onyxcord.Command {
 		Execute: func(bot *onyxcord.Bot, interaction *discordgo.InteractionCreate) (err error) {
 			return bot.Client.InteractionRespond(interaction.Interaction, &discordgo.InteractionResponse{
 				Type: discordgo.InteractionResponseChannelMessageWithSource,
-				Data: &discordgo.InteractionApplicationCommandResponseData{
+				Data: &discordgo.InteractionResponseData{
 					Embeds: []*discordgo.MessageEmbed{
 						bot.MakeEmbed(&discordgo.MessageEmbed{
 							Title: "ℹ À propos",
