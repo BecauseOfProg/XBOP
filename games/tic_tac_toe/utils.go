@@ -63,7 +63,7 @@ func generateGrid(columns []string, disabled bool) (grid []discordgo.MessageComp
 	return
 }
 
-func generateTurnMessage(user *discordgo.User, token int) string {
+func generateTurnMessage(user *discordgo.Member, token int) string {
 	return fmt.Sprintf(
 		"**:arrow_right: %s, à votre tour** (vous êtes %s)",
 		user.Mention(),

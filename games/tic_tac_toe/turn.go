@@ -27,7 +27,7 @@ func handleTurn(bot *onyxcord.Bot, interaction *discordgo.InteractionCreate, arg
 	column := columns[columnIndex]
 	if column[rowIndex] != '0' || playingUserID != interaction.Member.User.ID {
 		token, _ := strconv.Atoi(playingIndex)
-		editMessage(bot, interaction, playingMember.User, token, columns)
+		editMessage(bot, interaction, playingMember, token, columns)
 		return
 	}
 
@@ -53,12 +53,12 @@ func handleTurn(bot *onyxcord.Bot, interaction *discordgo.InteractionCreate, arg
 		bot.Cache.HSet(context.Background(), cacheID, "turn", turn+1)
 	}
 
-	editMessage(bot, interaction, waitingMember.User, waitingIndex, columns)
+	editMessage(bot, interaction, waitingMember, waitingIndex, columns)
 
 	return
 }
 
-func editMessage(bot *onyxcord.Bot, interaction *discordgo.InteractionCreate, player *discordgo.User, token int, columns []string) {
+func editMessage(bot *onyxcord.Bot, interaction *discordgo.InteractionCreate, player *discordgo.Member, token int, columns []string) {
 	bot.Client.InteractionRespond(interaction.Interaction, &discordgo.InteractionResponse{
 		Type: discordgo.InteractionResponseUpdateMessage,
 		Data: &discordgo.InteractionResponseData{
