@@ -34,12 +34,12 @@ func handleTurn(bot *onyxcord.Bot, interaction *discordgo.InteractionCreate, cac
 	columnIndex, _ := strconv.Atoi(args[1])
 
 	columns[columnIndex] = strings.Replace(columns[columnIndex], "0", playingIndex, 1)
-	rowIndex := -1
-	for _, char := range columns[columnIndex] {
+	rowIndex := 0
+	for i, char := range columns[columnIndex] {
 		if string(char) == "0" {
+			rowIndex = i - 1
 			break
 		}
-		rowIndex++
 	}
 
 	bot.Cache.HSet(context.Background(), cacheID, "playing", waitingIndex)
