@@ -2,7 +2,7 @@ package connect_four
 
 import (
 	"context"
-	"fmt"
+
 	"github.com/bwmarrin/discordgo"
 	"github.com/theovidal/onyxcord"
 )
@@ -14,38 +14,27 @@ func Command() *onyxcord.Command {
 			player1 := interaction.Member.User
 			player2 := interaction.ApplicationCommandData().Options[0].UserValue(bot.Client)
 
+			var columns []string
+			for i := 0; i < 7; i++ {
+				columns = append(columns, "000000")
+				bot.Cache.LPush(context.Background(), "connectfour:"+interaction.ChannelID+"/columns", "000000")
+			}
+
 			err = bot.Client.InteractionRespond(interaction.Interaction, &discordgo.InteractionResponse{
 				Type: discordgo.InteractionResponseChannelMessageWithSource,
 				Data: &discordgo.InteractionResponseData{
-					Content: fmt.Sprintf("**:red_circle: %s affronte désormais :yellow_circle: %s au Puissance 4!**\nLorsque c'est à vous de jouer, indiquez le numéro de la colonne dans laquelle mettre votre jeton.", player1.Mention(), player2.Mention()),
-					Components: []discordgo.MessageComponent{
-						discordgo.ActionsRow{
-							Components: []discordgo.MessageComponent{
-								stopButton(false),
-							},
-						},
-					},
+					Content:    generateTurnMessage(player1, 1) + generateGrid(columns),
+					Components: components(columns, false),
 				},
 			})
 			if err != nil {
 				return
 			}
 
-			var columns []string
-			for i := 0; i < 7; i++ {
-				columns = append(columns, "000000")
-				bot.Cache.LPush(context.Background(), "connectfour:"+interaction.ChannelID+"/grid", "000000")
-			}
-
-			game, _ := bot.Client.ChannelMessageSend(interaction.ChannelID, generateGrid(columns))
-			turnMessage := sendTurnMessage(bot, player1, interaction.ChannelID, 1)
-
 			bot.Cache.HMSet(context.Background(), "connectfour:"+interaction.ChannelID,
 				"1", player1.ID,
 				"2", player2.ID,
-				"turn", "1",
-				"message", game.ID,
-				"turnMessage", turnMessage,
+				"playing", "1",
 			)
 
 			return

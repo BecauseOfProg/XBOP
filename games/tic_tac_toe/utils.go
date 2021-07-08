@@ -45,7 +45,7 @@ func generateGrid(columns []string, disabled bool) (grid []discordgo.MessageComp
 				CustomID: fmt.Sprintf("tictactoe_%d_%d", columnIndex, rowIndex),
 				Style:    style,
 				Disabled: disabled,
-				Emoji: discordgo.ButtonEmoji{
+				Emoji: discordgo.ComponentEmoji{
 					Name: tokens[token],
 				},
 			})

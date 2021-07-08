@@ -9,47 +9,43 @@ import (
 	"github.com/theovidal/onyxcord"
 )
 
-func handleTurn(bot *onyxcord.Bot, message *discordgo.Message, cacheID string) {
-	turn := bot.Cache.HGet(context.Background(), cacheID, "turn").Val()
-	player := bot.Cache.HGet(context.Background(), cacheID, turn).Val()
+func handleTurn(bot *onyxcord.Bot, interaction *discordgo.InteractionCreate, cacheID string) {
+	playingIndex := bot.Cache.HGet(context.Background(), cacheID, "playing").Val()
+	playingUserID := bot.Cache.HGet(context.Background(), cacheID, playingIndex).Val()
+	playingMember, _ := bot.Client.GuildMember(interaction.GuildID, playingUserID)
 
-	if message.Author.Bot || player != message.Author.ID || message.Content[0] == '!' {
+	waitingIndex := 1
+	if playingIndex == "1" {
+		waitingIndex = 2
+	}
+
+	waitingUserID := bot.Cache.HGet(context.Background(), cacheID, strconv.Itoa(waitingIndex)).Val()
+	waitingMember, _ := bot.Client.GuildMember(interaction.GuildID, waitingUserID)
+
+	columns := bot.Cache.LRange(context.Background(), cacheID+"/columns", 0, -1).Val()
+
+	if playingMember.User.ID != interaction.Member.User.ID {
+		token, _ := strconv.Atoi(playingIndex)
+		editMessage(bot, interaction, playingMember.User, token, columns)
 		return
 	}
 
-	turnMessage := bot.Cache.HGet(context.Background(), cacheID, "turnMessage").Val()
-	bot.Client.ChannelMessageDelete(message.ChannelID, turnMessage)
-	bot.Client.ChannelMessageDelete(message.ChannelID, message.ID)
+	columnIndex, _ := strconv.Atoi(interaction.MessageComponentData().Values[0])
 
-	column, err := strconv.Atoi(string(message.Content[0]))
-	if err != nil || column < 1 || column > 7 {
-		bot.Client.ChannelMessageSend(message.ChannelID, "*:arrows_counterclockwise: Rangée invalide.*")
-		return
-	}
+	columns[columnIndex] = strings.Replace(columns[columnIndex], "0", playingIndex, 1)
 
-	column -= 1
-	grid := bot.Cache.LRange(context.Background(), cacheID+"/grid", 0, -1).Val()
-	oldRow := grid[column]
-	grid[column] = strings.Replace(grid[column], "0", turn, 1)
-	if oldRow == grid[column] {
-		bot.Client.ChannelMessageSend(message.ChannelID, "*:arrows_counterclockwise: Rangée invalide.*")
-		return
-	}
+	bot.Cache.HSet(context.Background(), cacheID, "playing", waitingIndex)
+	bot.Cache.LSet(context.Background(), cacheID+"/columns", int64(columnIndex), columns[columnIndex])
 
-	game := bot.Cache.HGet(context.Background(), cacheID, "message").Val()
-	bot.Client.ChannelMessageEdit(message.ChannelID, game, generateGrid(grid))
+	editMessage(bot, interaction, waitingMember.User, waitingIndex, columns)
+}
 
-	var nowTurn int
-	if turn == "1" {
-		nowTurn = 2
-	} else {
-		nowTurn = 1
-	}
-	bot.Cache.HSet(context.Background(), cacheID, "turn", nowTurn)
-	bot.Cache.LSet(context.Background(), cacheID+"/grid", int64(column), grid[column])
-
-	nowPlayerID := bot.Cache.HGet(context.Background(), cacheID, strconv.Itoa(nowTurn)).Val()
-	nowPlayer, _ := bot.Client.GuildMember(message.GuildID, nowPlayerID)
-	turnMessage = sendTurnMessage(bot, nowPlayer.User, message.ChannelID, nowTurn)
-	bot.Cache.HSet(context.Background(), cacheID, "turnMessage", turnMessage)
+func editMessage(bot *onyxcord.Bot, interaction *discordgo.InteractionCreate, player *discordgo.User, token int, columns []string) {
+	bot.Client.InteractionRespond(interaction.Interaction, &discordgo.InteractionResponse{
+		Type: discordgo.InteractionResponseUpdateMessage,
+		Data: &discordgo.InteractionResponseData{
+			Content:    generateTurnMessage(player, token) + generateGrid(columns),
+			Components: components(columns, false),
+		},
+	})
 }

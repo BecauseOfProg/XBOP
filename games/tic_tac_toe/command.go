@@ -17,7 +17,7 @@ func Command() *onyxcord.Command {
 			var columns []string
 			for i := 0; i < 3; i++ {
 				columns = append(columns, "000")
-				bot.Cache.LPush(context.Background(), "tictactoe:"+interaction.ChannelID+"/grid", "000")
+				bot.Cache.LPush(context.Background(), "tictactoe:"+interaction.ChannelID+"/columns", "000")
 			}
 
 			err = bot.Client.InteractionRespond(interaction.Interaction, &discordgo.InteractionResponse{

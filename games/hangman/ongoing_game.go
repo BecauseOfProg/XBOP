@@ -15,18 +15,15 @@ func HandleOngoingGame(bot *onyxcord.Bot, message *discordgo.Message) {
 	}
 }
 
-func StopGame(bot *onyxcord.Bot, interaction *discordgo.InteractionCreate) error {
+func StopGame(bot *onyxcord.Bot, interaction *discordgo.InteractionCreate, _ []string) error {
 	cacheID := "hangman:" + interaction.ChannelID
 	word := bot.Cache.HGet(context.Background(), cacheID, "word").Val()
 	bot.Cache.Del(context.Background(), cacheID)
 
-	bot.Client.ChannelMessageSend(
-		interaction.ChannelID,
-		fmt.Sprintf("**:stop_sign: Arrêt de la partie prononcé.**\n\nLe mot à trouver était **%s**.", word),
-	)
 	return bot.Client.InteractionRespond(interaction.Interaction, &discordgo.InteractionResponse{
 		Type: discordgo.InteractionResponseUpdateMessage,
 		Data: &discordgo.InteractionResponseData{
+			Content: fmt.Sprintf("**:stop_sign: Arrêt de la partie prononcé par %s.**\n\nLe mot à trouver était **%s**.", interaction.Member.Mention(), word),
 			Components: []discordgo.MessageComponent{
 				discordgo.ActionsRow{
 					Components: []discordgo.MessageComponent{

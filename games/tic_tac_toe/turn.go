@@ -20,25 +20,25 @@ func handleTurn(bot *onyxcord.Bot, interaction *discordgo.InteractionCreate, arg
 	waitingUserID := bot.Cache.HGet(context.Background(), cacheID, strconv.Itoa(waitingIndex)).Val()
 	waitingMember, _ := bot.Client.GuildMember(interaction.GuildID, waitingUserID)
 
-	grid := bot.Cache.LRange(context.Background(), cacheID+"/grid", 0, -1).Val()
+	columns := bot.Cache.LRange(context.Background(), cacheID+"/columns", 0, -1).Val()
 
 	columnIndex, _ := strconv.Atoi(args[0])
 	rowIndex, _ := strconv.Atoi(args[1])
-	column := grid[columnIndex]
+	column := columns[columnIndex]
 	if column[rowIndex] != '0' || playingUserID != interaction.Member.User.ID {
 		token, _ := strconv.Atoi(playingIndex)
-		editMessage(bot, interaction, playingMember.User, token, grid)
+		editMessage(bot, interaction, playingMember.User, token, columns)
 		return
 	}
 
-	grid[columnIndex] = column[:rowIndex] + playingIndex + column[rowIndex+1:]
+	columns[columnIndex] = column[:rowIndex] + playingIndex + column[rowIndex+1:]
 	bot.Cache.HSet(context.Background(), cacheID, "playing", waitingIndex)
-	bot.Cache.LSet(context.Background(), cacheID+"/grid", int64(columnIndex), grid[columnIndex])
+	bot.Cache.LSet(context.Background(), cacheID+"/columns", int64(columnIndex), columns[columnIndex])
 
 	for _, config := range winningGrids {
 		k := 0
 		for _, pos := range config {
-			if string(grid[pos[0]][pos[1]]) == playingIndex {
+			if string(columns[pos[0]][pos[1]]) == playingIndex {
 				k++
 			}
 		}
@@ -53,7 +53,7 @@ func handleTurn(bot *onyxcord.Bot, interaction *discordgo.InteractionCreate, arg
 		bot.Cache.HSet(context.Background(), cacheID, "turn", turn+1)
 	}
 
-	editMessage(bot, interaction, waitingMember.User, waitingIndex, grid)
+	editMessage(bot, interaction, waitingMember.User, waitingIndex, columns)
 
 	return
 }

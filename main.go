@@ -22,13 +22,12 @@ func main() {
 	}
 
 	bot.Components = map[string]onyxcord.Component{
-		"connectfour": connect_four.StopGame,
+		"connectfour": connect_four.HandleOngoingGame,
 		"hangman":     hangman.StopGame,
 		"tictactoe":   tic_tac_toe.HandleOngoingGame,
 	}
 
 	bot.Client.AddHandler(func(session *discordgo.Session, message *discordgo.MessageCreate) {
-		connect_four.HandleOngoingGame(&bot, message.Message)
 		hangman.HandleOngoingGame(&bot, message.Message)
 		irregular_verbs.HandleOngoingGame(&bot, message.Message)
 	})

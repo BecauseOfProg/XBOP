@@ -22,8 +22,8 @@ func HandleOngoingGame(bot *onyxcord.Bot, interaction *discordgo.InteractionCrea
 
 func stopGame(bot *onyxcord.Bot, interaction *discordgo.InteractionCreate, reason string) error {
 	cacheID := "tictactoe:" + interaction.ChannelID
-	columns := bot.Cache.LRange(context.Background(), cacheID+"/grid", 0, -1).Val()
-	bot.Cache.Del(context.Background(), cacheID, cacheID+"/grid")
+	columns := bot.Cache.LRange(context.Background(), cacheID+"/columns", 0, -1).Val()
+	bot.Cache.Del(context.Background(), cacheID, cacheID+"/columns")
 
 	return bot.Client.InteractionRespond(interaction.Interaction, &discordgo.InteractionResponse{
 		Type: discordgo.InteractionResponseUpdateMessage,
