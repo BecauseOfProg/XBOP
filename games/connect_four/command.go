@@ -11,7 +11,7 @@ func Command() *onyxcord.Command {
 	return &onyxcord.Command{
 		ListenInPublic: true,
 		Execute: func(bot *onyxcord.Bot, interaction *discordgo.InteractionCreate) (err error) {
-			player1 := interaction.Member.User
+			player1 := interaction.Member
 			player2 := interaction.ApplicationCommandData().Options[0].UserValue(bot.Client)
 
 			var columns []string
@@ -32,7 +32,7 @@ func Command() *onyxcord.Command {
 			}
 
 			bot.Cache.HMSet(context.Background(), "connectfour:"+interaction.ChannelID,
-				"1", player1.ID,
+				"1", player1.User.ID,
 				"2", player2.ID,
 				"playing", "1",
 			)

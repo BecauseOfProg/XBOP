@@ -2,6 +2,7 @@ package connect_four
 
 import (
 	"context"
+	"fmt"
 	"strconv"
 	"strings"
 
@@ -9,7 +10,7 @@ import (
 	"github.com/theovidal/onyxcord"
 )
 
-func handleTurn(bot *onyxcord.Bot, interaction *discordgo.InteractionCreate, cacheID string) {
+func handleTurn(bot *onyxcord.Bot, interaction *discordgo.InteractionCreate, cacheID string, args []string) (err error) {
 	playingIndex := bot.Cache.HGet(context.Background(), cacheID, "playing").Val()
 	playingUserID := bot.Cache.HGet(context.Background(), cacheID, playingIndex).Val()
 	playingMember, _ := bot.Client.GuildMember(interaction.GuildID, playingUserID)
@@ -26,21 +27,33 @@ func handleTurn(bot *onyxcord.Bot, interaction *discordgo.InteractionCreate, cac
 
 	if playingMember.User.ID != interaction.Member.User.ID {
 		token, _ := strconv.Atoi(playingIndex)
-		editMessage(bot, interaction, playingMember.User, token, columns)
+		editMessage(bot, interaction, playingMember, token, columns)
 		return
 	}
 
-	columnIndex, _ := strconv.Atoi(interaction.MessageComponentData().Values[0])
+	columnIndex, _ := strconv.Atoi(args[1])
 
 	columns[columnIndex] = strings.Replace(columns[columnIndex], "0", playingIndex, 1)
+	rowIndex := -1
+	for _, char := range columns[columnIndex] {
+		if string(char) == "0" {
+			break
+		}
+		rowIndex++
+	}
 
 	bot.Cache.HSet(context.Background(), cacheID, "playing", waitingIndex)
 	bot.Cache.LSet(context.Background(), cacheID+"/columns", int64(columnIndex), columns[columnIndex])
 
-	editMessage(bot, interaction, waitingMember.User, waitingIndex, columns)
+	if isVictorious(columns, columnIndex, rowIndex) {
+		return stopGame(bot, interaction, fmt.Sprintf("%s remporte la partie!", playingMember.Mention()))
+	}
+
+	editMessage(bot, interaction, waitingMember, waitingIndex, columns)
+	return
 }
 
-func editMessage(bot *onyxcord.Bot, interaction *discordgo.InteractionCreate, player *discordgo.User, token int, columns []string) {
+func editMessage(bot *onyxcord.Bot, interaction *discordgo.InteractionCreate, player *discordgo.Member, token int, columns []string) {
 	bot.Client.InteractionRespond(interaction.Interaction, &discordgo.InteractionResponse{
 		Type: discordgo.InteractionResponseUpdateMessage,
 		Data: &discordgo.InteractionResponseData{
@@ -48,4 +61,61 @@ func editMessage(bot *onyxcord.Bot, interaction *discordgo.InteractionCreate, pl
 			Components: components(columns, false),
 		},
 	})
+}
+
+var directions = [][]int{
+	{1, 1},
+	{1, 0},
+	{1, -1},
+	{0, -1},
+	{-1, -1},
+	{-1, 0},
+	{-1, 1},
+	{0, 1},
+}
+
+func isVictorious(columns []string, column, row int) bool {
+	columnDiff := 0
+	rowDiff := 0
+	token := string(columns[column][row])
+
+	directionIndex := 0
+	directionCounts := []int{1, 1, 1, 1}
+
+	for {
+		if directionIndex == 8 {
+			return false
+		}
+
+		direction := directions[directionIndex]
+
+		columnDiff += direction[0]
+		rowDiff += direction[1]
+
+		nextColumn := column + columnDiff
+		nextRow := row + rowDiff
+
+		if nextColumn < 0 || nextColumn > 6 || nextRow < 0 || nextRow > 5 {
+			directionIndex += 1
+			columnDiff = 0
+			rowDiff = 0
+			continue
+		}
+		nextToken := string(columns[column+columnDiff][row+rowDiff])
+
+		if nextToken == token {
+			directionCounts[directionIndex%4] += 1
+		} else {
+			directionIndex += 1
+			columnDiff = 0
+			rowDiff = 0
+			continue
+		}
+
+		for _, count := range directionCounts {
+			if count == 4 {
+				return true
+			}
+		}
+	}
 }
