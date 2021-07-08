@@ -8,6 +8,7 @@ import (
 	"github.com/BecauseOfProg/xbop/games/connect_four"
 	"github.com/BecauseOfProg/xbop/games/hangman"
 	"github.com/BecauseOfProg/xbop/games/irregular_verbs"
+	"github.com/BecauseOfProg/xbop/games/tic_tac_toe"
 )
 
 func main() {
@@ -16,12 +17,14 @@ func main() {
 		"verbs":        irregular_verbs.Command(),
 		"connect-four": connect_four.Command(),
 		"hangman":      hangman.Command(),
+		"tic-tac-toe":  tic_tac_toe.Command(),
 		"about":        commands.About(),
 	}
 
 	bot.Components = map[string]onyxcord.Component{
-		"connectfour_stop": connect_four.StopGame,
-		"hangman_stop":     hangman.StopGame,
+		"connectfour": connect_four.StopGame,
+		"hangman":     hangman.StopGame,
+		"tictactoe":   tic_tac_toe.HandleOngoingGame,
 	}
 
 	bot.Client.AddHandler(func(session *discordgo.Session, message *discordgo.MessageCreate) {
