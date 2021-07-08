@@ -12,19 +12,15 @@ var tokens = []string{":white_large_square:", ":red_circle:", ":yellow_circle:"}
 
 var numbers = []string{"1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣"}
 
-func components(columns []string, disabled bool) []discordgo.MessageComponent {
-	return []discordgo.MessageComponent{
-		discordgo.ActionsRow{
-			Components: []discordgo.MessageComponent{
-				selectMenu(columns, disabled),
-			},
+func components(columns []string, disabled bool) (list []discordgo.MessageComponent) {
+	list = selectButtons(columns, disabled)
+	list = append(list, discordgo.ActionsRow{
+		Components: []discordgo.MessageComponent{
+			stopButton(disabled),
 		},
-		discordgo.ActionsRow{
-			Components: []discordgo.MessageComponent{
-				stopButton(disabled),
-			},
-		},
-	}
+	})
+
+	return
 }
 
 func stopButton(disabled bool) discordgo.Button {
@@ -36,27 +32,26 @@ func stopButton(disabled bool) discordgo.Button {
 	}
 }
 
-func selectMenu(columns []string, _ bool) discordgo.SelectMenu {
-	var options []discordgo.SelectMenuOption
+func selectButtons(columns []string, disabled bool) (buttons []discordgo.MessageComponent) {
+	var row discordgo.ActionsRow
 	for i := 0; i < 7; i++ {
 		if strings.Contains(columns[i], "0") {
-			options = append(options, discordgo.SelectMenuOption{
-				Label: fmt.Sprintf("Colonne %d", i+1),
-				Value: strconv.Itoa(i),
+			row.Components = append(row.Components, discordgo.Button{
+				Style:    discordgo.PrimaryButton,
+				Disabled: disabled,
 				Emoji: discordgo.ComponentEmoji{
 					Name: numbers[i],
 				},
+				CustomID: fmt.Sprintf("connectfour_turn_%d", i),
 			})
+		}
+		if len(row.Components) == 5 || i == 6 {
+			buttons = append(buttons, row)
+			row = discordgo.ActionsRow{}
 		}
 	}
 
-	return discordgo.SelectMenu{
-		CustomID:    "connectfour_turn",
-		Placeholder: "Colonne où insérer le jeton",
-		MinValues:   1,
-		MaxValues:   1,
-		Options:     options,
-	}
+	return
 }
 
 func generateGrid(columns []string) string {
@@ -77,7 +72,7 @@ func generateGrid(columns []string) string {
 	return output
 }
 
-func generateTurnMessage(user *discordgo.User, token int) string {
+func generateTurnMessage(user *discordgo.Member, token int) string {
 	return fmt.Sprintf(
 		"**:arrow_right: %s, à votre tour** (vous êtes %s)\n",
 		user.Mention(),
