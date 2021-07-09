@@ -3,6 +3,7 @@ package irregular_verbs
 import (
 	"context"
 	"fmt"
+
 	"github.com/bwmarrin/discordgo"
 	"github.com/theovidal/onyxcord"
 )
@@ -39,7 +40,7 @@ func Command() *onyxcord.Command {
 				return
 			}
 
-			bot.Cache.HMSet(context.Background(), "verbs:"+interaction.ChannelID,
+			bot.Cache.HSet(context.Background(), "verbs:"+interaction.ChannelID,
 				"answers", 0,
 				"part", part,
 				"successfulAnswers", 0,

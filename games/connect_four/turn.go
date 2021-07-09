@@ -46,7 +46,7 @@ func handleTurn(bot *onyxcord.Bot, interaction *discordgo.InteractionCreate, cac
 	bot.Cache.LSet(context.Background(), cacheID+"/columns", int64(columnIndex), columns[columnIndex])
 
 	if isVictorious(columns, columnIndex, rowIndex) {
-		return stopGame(bot, interaction, fmt.Sprintf("%s remporte la partie!", playingMember.Mention()))
+		return stopGame(bot, interaction, fmt.Sprintf(":tada: %s remporte la partie!", playingMember.Mention()))
 	}
 
 	editMessage(bot, interaction, waitingMember, waitingIndex, columns)

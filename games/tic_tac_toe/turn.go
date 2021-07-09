@@ -3,9 +3,10 @@ package tic_tac_toe
 import (
 	"context"
 	"fmt"
+	"strconv"
+
 	"github.com/bwmarrin/discordgo"
 	"github.com/theovidal/onyxcord"
-	"strconv"
 )
 
 func handleTurn(bot *onyxcord.Bot, interaction *discordgo.InteractionCreate, args []string, cacheID string) (err error) {
@@ -43,7 +44,7 @@ func handleTurn(bot *onyxcord.Bot, interaction *discordgo.InteractionCreate, arg
 			}
 		}
 		if k == 3 {
-			return stopGame(bot, interaction, fmt.Sprintf("%s remporte la partie!", playingMember.User.Mention()))
+			return stopGame(bot, interaction, fmt.Sprintf(":tada: %s remporte la partie!", playingMember.User.Mention()))
 		}
 	}
 

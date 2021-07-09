@@ -25,30 +25,22 @@ func Command() *onyxcord.Command {
 			} else {
 				maxErrors = int(options[0].IntValue())
 			}
+			letters := string(word[0])
 
 			_ = bot.Client.InteractionRespond(interaction.Interaction, &discordgo.InteractionResponse{
 				Type: discordgo.InteractionResponseChannelMessageWithSource,
 				Data: &discordgo.InteractionResponseData{
-					Content: "**:chains: Et c'est parti pour un jeu du pendu !**\nTous les utilisateurs ayant accès au salon peuvent participer.",
-					Components: []discordgo.MessageComponent{
-						discordgo.ActionsRow{
-							Components: []discordgo.MessageComponent{
-								stopButton(false),
-							},
-						},
-					},
+					Content:    formatMessage(word, letters, "", maxErrors, ""),
+					Components: stopButton(false),
 				},
 			})
 
-			letters := string(word[0])
-			game, _ := bot.Client.ChannelMessageSend(interaction.ChannelID, formatMessage(word, letters, "", maxErrors))
-
-			bot.Cache.HMSet(context.Background(), "hangman:"+interaction.ChannelID,
+			bot.Cache.HSet(context.Background(), "hangman:"+interaction.ChannelID,
 				"word", word,
 				"letters", letters,
-				"falseLetters", "",
+				"wrongLetters", "",
 				"maxErrors", maxErrors,
-				"message", game.ID,
+				"game", interaction.Token,
 			)
 
 			return

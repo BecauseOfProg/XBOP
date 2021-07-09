@@ -12,7 +12,7 @@ func HandleOngoingGame(bot *onyxcord.Bot, interaction *discordgo.InteractionCrea
 	connectFourPlayer := bot.Cache.Exists(context.Background(), "tictactoe:"+interaction.ChannelID).Val()
 	if connectFourPlayer == 1 {
 		if args[0] == "stop" {
-			err = stopGame(bot, interaction, fmt.Sprintf("L'arrêt de la partie a été prononcé par %s.", interaction.Member.Mention()))
+			err = stopGame(bot, interaction, fmt.Sprintf(":stop_sign: Arrêt de la partie prononcé par %s.", interaction.Member.Mention()))
 		} else {
 			err = handleTurn(bot, interaction, args, "tictactoe:"+interaction.ChannelID)
 		}
@@ -34,7 +34,7 @@ func stopGame(bot *onyxcord.Bot, interaction *discordgo.InteractionCreate, reaso
 	return bot.Client.InteractionRespond(interaction.Interaction, &discordgo.InteractionResponse{
 		Type: discordgo.InteractionResponseUpdateMessage,
 		Data: &discordgo.InteractionResponseData{
-			Content:    fmt.Sprintf("**:stop_sign: %s**", reason),
+			Content:    fmt.Sprintf("**%s**", reason),
 			Components: generateGrid(columns, true),
 		},
 	})

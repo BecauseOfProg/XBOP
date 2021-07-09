@@ -20,24 +20,36 @@ func openWords() []string {
 	return strings.Split(string(content), "\n")
 }
 
-func hideWord(word string, letters string) string {
+func hideWord(word, letters string) string {
 	regex := regexp.MustCompile(fmt.Sprintf("[^%c%s]", word[0], letters))
 	return string(regex.ReplaceAll([]byte(word), []byte("_ ")))
 }
 
-func stopButton(disabled bool) discordgo.Button {
-	return discordgo.Button{
-		Label:    "Arrêter la partie",
-		Style:    discordgo.DangerButton,
-		CustomID: "hangman_stop",
-		Disabled: disabled,
+func stopButton(disabled bool) []discordgo.MessageComponent {
+	return []discordgo.MessageComponent{
+		discordgo.ActionsRow{
+			Components: []discordgo.MessageComponent{
+				discordgo.Button{
+					Label:    "Arrêter la partie",
+					Style:    discordgo.DangerButton,
+					CustomID: "hangman_stop",
+					Disabled: disabled,
+				},
+			},
+		},
 	}
 }
 
-func formatMessage(word string, letters string, falseLetters string, errors int) string {
-	format := fmt.Sprintf(":arrow_forward: `%s`\nErreurs restantes : %d", hideWord(word, letters), errors-len(falseLetters))
-	if falseLetters != "" {
-		format += fmt.Sprintf("\nUtilisées : %s", falseLetters)
+const defaultMessage = "**:chains: Un jeu du pendu est en cours dans le salon!**\nTous les utilisateurs ayant accès au salon peuvent participer. Pour que votre message ne soit pas compté, précédez-le d'un point d'exclamation `!`.\n*La partie est valable pendant 15 minutes après son lancement.*"
+
+func formatMessage(word, letters, wrongLetters string, maxErrors int, message string) string {
+	if message == "" {
+		message = defaultMessage
+	}
+
+	format := fmt.Sprintf("%s\n\n:arrow_forward: `%s`\nErreurs restantes : %d", message, hideWord(word, letters), maxErrors-len(wrongLetters))
+	if wrongLetters != "" {
+		format += fmt.Sprintf("\nUtilisées : %s", wrongLetters)
 	}
 	return format
 }

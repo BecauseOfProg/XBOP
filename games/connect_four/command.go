@@ -31,7 +31,7 @@ func Command() *onyxcord.Command {
 				return
 			}
 
-			bot.Cache.HMSet(context.Background(), "connectfour:"+interaction.ChannelID,
+			bot.Cache.HSet(context.Background(), "connectfour:"+interaction.ChannelID,
 				"1", player1.User.ID,
 				"2", player2.ID,
 				"playing", "1",

@@ -3,6 +3,7 @@ package connect_four
 import (
 	"context"
 	"fmt"
+
 	"github.com/bwmarrin/discordgo"
 	"github.com/theovidal/onyxcord"
 )
@@ -12,7 +13,7 @@ func HandleOngoingGame(bot *onyxcord.Bot, interaction *discordgo.InteractionCrea
 	if connectFourPlayer == 1 {
 		switch args[0] {
 		case "stop":
-			return stopGame(bot, interaction, fmt.Sprintf("Arrêt de la partie prononcé par %s.", interaction.Member.Mention()))
+			return stopGame(bot, interaction, fmt.Sprintf(":stop_sign: Arrêt de la partie prononcé par %s.", interaction.Member.Mention()))
 		case "turn":
 			return handleTurn(bot, interaction, "connectfour:"+interaction.ChannelID, args)
 		}
@@ -34,7 +35,7 @@ func stopGame(bot *onyxcord.Bot, interaction *discordgo.InteractionCreate, reaso
 	return bot.Client.InteractionRespond(interaction.Interaction, &discordgo.InteractionResponse{
 		Type: discordgo.InteractionResponseUpdateMessage,
 		Data: &discordgo.InteractionResponseData{
-			Content:    fmt.Sprintf("**:stop_sign: %s**\n", reason) + generateGrid(columns),
+			Content:    fmt.Sprintf("**%s**\n", reason) + generateGrid(columns),
 			Components: components(columns, true),
 		},
 	})
