@@ -1,6 +1,6 @@
 dev:
   debug: false
-  version: 0.1.2
+  version: 0.1.3
   maintainer:
     name: Théo Vidal
     link: https://github.com/theovidal
@@ -9,6 +9,7 @@ bot:
   id: 796457702666534972
   illustration: https://cdn.discordapp.com/app-icons/796457702666534972/88a99cba60ccf586d54a1d38f450e8f9.png?size=256
   website: https://github.com/BecauseOfProg/XBOP
+  server: https://discord.gg/tcV7GQq
   invite_link: https://discord.com/oauth2/authorize?client_id=796457702666534972&permissions=3136&redirect_uri=https%3A%2F%2Fbecauseofprog.fr&response_type=code&scope=bot%20applications.commands%20applications.commands.update
   license: https://github.com/BecauseOfProg/XBOP/blob/main/LICENSE
   donate: https://www.buymeacoffee.com/theovidal

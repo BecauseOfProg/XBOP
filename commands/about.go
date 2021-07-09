@@ -2,6 +2,7 @@ package commands
 
 import (
 	"fmt"
+
 	"github.com/bwmarrin/discordgo"
 	"github.com/theovidal/onyxcord"
 )
@@ -24,21 +25,50 @@ func About() *onyxcord.Command {
 								"Son code source est ouvert à tous : n'hésitez-pas à contribuer à son développement !\n\n"+
 
 								"🔨 Version : %s\n"+
-								"🌐 [Site Internet](%s)\n"+
 								"💻 Développeur : [%s](%s)\n\n"+
-
-								"Si vous aimez le projet, vous pouvez [le supporter financièrement](%s)! ❤\n\n"+
 
 								"© 2020-présent, BecauseOfProg. Sous licence [GNU GPL v3](%s)",
 								bot.Config.Bot.InviteLink,
 								bot.Config.Dev.Version,
-								bot.Config.Bot.Website,
 								bot.Config.Dev.Maintainer.Name,
 								bot.Config.Dev.Maintainer.Link,
-								bot.Config.Bot.Donate,
 								bot.Config.Bot.License,
 							),
 						}),
+					},
+					Components: []discordgo.MessageComponent{
+						discordgo.ActionsRow{
+							Components: []discordgo.MessageComponent{
+								discordgo.Button{
+									Style: discordgo.LinkButton,
+									Label: "Site Internet",
+									Emoji: discordgo.ComponentEmoji{
+										Name: "🌐",
+									},
+									URL: bot.Config.Bot.Website,
+								},
+								discordgo.Button{
+									Style: discordgo.LinkButton,
+									Label: "Serveur Discord",
+									Emoji: discordgo.ComponentEmoji{
+										Name: "💬",
+									},
+									URL: bot.Config.Bot.Server,
+								},
+							},
+						},
+						discordgo.ActionsRow{
+							Components: []discordgo.MessageComponent{
+								discordgo.Button{
+									Style: discordgo.LinkButton,
+									Label: "Supporter financièrement le projet",
+									Emoji: discordgo.ComponentEmoji{
+										Name: "❤",
+									},
+									URL: bot.Config.Bot.Donate,
+								},
+							},
+						},
 					},
 				},
 			})
