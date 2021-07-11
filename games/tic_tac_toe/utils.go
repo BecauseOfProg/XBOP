@@ -20,15 +20,6 @@ var winningGrids = [][][]int{
 	{{0, 2}, {1, 2}, {2, 2}},
 }
 
-func stopButton(disabled bool) discordgo.Button {
-	return discordgo.Button{
-		Label:    "Arrêter la partie",
-		Style:    discordgo.DangerButton,
-		CustomID: "tictactoe_stop",
-		Disabled: disabled,
-	}
-}
-
 func generateGrid(columns []string, disabled bool) (grid []discordgo.MessageComponent) {
 	for columnIndex, column := range columns {
 		var buttons []discordgo.MessageComponent
@@ -54,16 +45,22 @@ func generateGrid(columns []string, disabled bool) (grid []discordgo.MessageComp
 			Components: buttons,
 		})
 	}
-	grid = append(grid, discordgo.ActionsRow{
-		Components: []discordgo.MessageComponent{
-			stopButton(disabled),
-		},
-	})
+	if !disabled {
+		grid = append(grid, discordgo.ActionsRow{
+			Components: []discordgo.MessageComponent{
+				discordgo.Button{
+					Label:    "Arrêter la partie",
+					Style:    discordgo.DangerButton,
+					CustomID: "tictactoe_stop",
+				},
+			},
+		})
+	}
 
 	return
 }
 
-func generateTurnMessage(user *discordgo.Member, token int) string {
+func generateTurnMessage(user *discordgo.User, token int) string {
 	return fmt.Sprintf(
 		"**:arrow_right: %s, à votre tour** (vous êtes %s)",
 		user.Mention(),

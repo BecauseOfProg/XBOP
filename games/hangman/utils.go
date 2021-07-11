@@ -1,6 +1,7 @@
 package hangman
 
 import (
+	"context"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -8,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
+	"github.com/theovidal/onyxcord"
 )
 
 var words = openWords()
@@ -25,7 +27,7 @@ func hideWord(word, letters string) string {
 	return string(regex.ReplaceAll([]byte(word), []byte("_ ")))
 }
 
-func stopButton(disabled bool) []discordgo.MessageComponent {
+func stopButton() []discordgo.MessageComponent {
 	return []discordgo.MessageComponent{
 		discordgo.ActionsRow{
 			Components: []discordgo.MessageComponent{
@@ -33,7 +35,6 @@ func stopButton(disabled bool) []discordgo.MessageComponent {
 					Label:    "Arrêter la partie",
 					Style:    discordgo.DangerButton,
 					CustomID: "hangman_stop",
-					Disabled: disabled,
 				},
 			},
 		},
@@ -52,4 +53,42 @@ func formatMessage(word, letters, wrongLetters string, maxErrors int, message st
 		format += fmt.Sprintf("\nUtilisées : %s", wrongLetters)
 	}
 	return format
+}
+
+func editMessage(bot *onyxcord.Bot, interaction *discordgo.InteractionCreate, channelID, word, letters, wrongLetters string, maxErrors int, message string, stop bool) (err error) {
+	token := bot.Cache.HGet(context.Background(), "hangman:"+channelID, "game").Val()
+
+	components := stopButton()
+	if stop {
+		components = []discordgo.MessageComponent{
+			discordgo.ActionsRow{
+				Components: []discordgo.MessageComponent{
+					discordgo.Button{
+						Label: fmt.Sprintf("Relancer (%d erreurs autorisées)", maxErrors),
+						Style: discordgo.SuccessButton,
+						Emoji: discordgo.ComponentEmoji{
+							Name: "🔄",
+						},
+						CustomID: fmt.Sprintf("hangman_restart_%d", maxErrors),
+					},
+				},
+			},
+		}
+	}
+
+	if interaction == nil {
+		_, err = bot.Client.InteractionResponseEdit(bot.Config.Bot.ID, &discordgo.Interaction{Token: token}, &discordgo.WebhookEdit{
+			Content:    formatMessage(word, letters, wrongLetters, maxErrors, message),
+			Components: components,
+		})
+	} else {
+		err = bot.Client.InteractionRespond(interaction.Interaction, &discordgo.InteractionResponse{
+			Type: discordgo.InteractionResponseUpdateMessage,
+			Data: &discordgo.InteractionResponseData{
+				Content:    formatMessage(word, letters, wrongLetters, maxErrors, message),
+				Components: components,
+			},
+		})
+	}
+	return
 }

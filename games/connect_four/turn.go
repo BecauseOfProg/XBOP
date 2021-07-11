@@ -46,6 +46,7 @@ func handleTurn(bot *onyxcord.Bot, interaction *discordgo.InteractionCreate, cac
 	bot.Cache.LSet(context.Background(), cacheID+"/columns", int64(columnIndex), columns[columnIndex])
 
 	if isVictorious(columns, columnIndex, rowIndex) {
+		fmt.Println("putain")
 		return stopGame(bot, interaction, fmt.Sprintf(":tada: %s remporte la partie!", playingMember.Mention()))
 	}
 
@@ -57,8 +58,8 @@ func editMessage(bot *onyxcord.Bot, interaction *discordgo.InteractionCreate, pl
 	bot.Client.InteractionRespond(interaction.Interaction, &discordgo.InteractionResponse{
 		Type: discordgo.InteractionResponseUpdateMessage,
 		Data: &discordgo.InteractionResponseData{
-			Content:    generateTurnMessage(player, token) + generateGrid(columns),
-			Components: components(columns, false),
+			Content:    generateTurnMessage(player.User, token) + generateGrid(columns),
+			Components: components(columns),
 		},
 	})
 }
@@ -112,8 +113,9 @@ func isVictorious(columns []string, column, row int) bool {
 			continue
 		}
 
+		fmt.Println(directionCounts)
 		for _, count := range directionCounts {
-			if count == 4 {
+			if count >= 4 {
 				return true
 			}
 		}

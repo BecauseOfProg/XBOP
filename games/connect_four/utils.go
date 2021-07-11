@@ -12,33 +12,31 @@ var tokens = []string{":white_large_square:", ":red_circle:", ":yellow_circle:"}
 
 var numbers = []string{"1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣"}
 
-func components(columns []string, disabled bool) (list []discordgo.MessageComponent) {
-	list = selectButtons(columns, disabled)
+func components(columns []string) (list []discordgo.MessageComponent) {
+	list = selectButtons(columns)
 	list = append(list, discordgo.ActionsRow{
 		Components: []discordgo.MessageComponent{
-			stopButton(disabled),
+			stopButton(),
 		},
 	})
 
 	return
 }
 
-func stopButton(disabled bool) discordgo.Button {
+func stopButton() discordgo.Button {
 	return discordgo.Button{
 		Label:    "Arrêter la partie",
 		Style:    discordgo.DangerButton,
 		CustomID: "connectfour_stop",
-		Disabled: disabled,
 	}
 }
 
-func selectButtons(columns []string, disabled bool) (buttons []discordgo.MessageComponent) {
+func selectButtons(columns []string) (buttons []discordgo.MessageComponent) {
 	var row discordgo.ActionsRow
 	for i := 0; i < 7; i++ {
 		if strings.Contains(columns[i], "0") {
 			row.Components = append(row.Components, discordgo.Button{
-				Style:    discordgo.PrimaryButton,
-				Disabled: disabled,
+				Style: discordgo.PrimaryButton,
 				Emoji: discordgo.ComponentEmoji{
 					Name: numbers[i],
 				},
@@ -72,7 +70,7 @@ func generateGrid(columns []string) string {
 	return output
 }
 
-func generateTurnMessage(user *discordgo.Member, token int) string {
+func generateTurnMessage(user *discordgo.User, token int) string {
 	return fmt.Sprintf(
 		"**:arrow_right: %s, à votre tour** (vous êtes %s)\n",
 		user.Mention(),

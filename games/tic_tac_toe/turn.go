@@ -63,7 +63,7 @@ func editMessage(bot *onyxcord.Bot, interaction *discordgo.InteractionCreate, pl
 	bot.Client.InteractionRespond(interaction.Interaction, &discordgo.InteractionResponse{
 		Type: discordgo.InteractionResponseUpdateMessage,
 		Data: &discordgo.InteractionResponseData{
-			Content:    generateTurnMessage(player, token),
+			Content:    generateTurnMessage(player.User, token),
 			Components: generateGrid(columns, false),
 		},
 	})

@@ -8,8 +8,7 @@ import (
 )
 
 func HandleOngoingGame(bot *onyxcord.Bot, message *discordgo.Message) {
-	verbsPlayer := bot.Cache.Exists(context.Background(), "verbs:"+message.ChannelID).Val()
-	if verbsPlayer == 1 {
+	if isGameOngoing := bot.Cache.Exists(context.Background(), "verbs:"+message.ChannelID).Val(); isGameOngoing == 1 {
 		handleAnswer(bot, message, "verbs:"+message.ChannelID)
 	}
 }
