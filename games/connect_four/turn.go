@@ -113,7 +113,6 @@ func isVictorious(columns []string, column, row int) bool {
 			continue
 		}
 
-		fmt.Println(directionCounts)
 		for _, count := range directionCounts {
 			if count >= 4 {
 				return true

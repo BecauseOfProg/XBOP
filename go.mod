@@ -10,4 +10,4 @@ require (
 
 replace github.com/theovidal/onyxcord => ../../theovidal/onyxcord
 
-replace github.com/bwmarrin/discordgo => github.com/FedorLap2006/discordgo v0.22.1-0.20210630204054-40bdedfa5215
+replace github.com/bwmarrin/discordgo => github.com/FedorLap2006/discordgo v0.22.1-0.20210810220050-f6231aba9904

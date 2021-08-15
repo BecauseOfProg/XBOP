@@ -14,11 +14,15 @@ import (
 func main() {
 	bot := onyxcord.RegisterBot("XBOP")
 	bot.Commands = map[string]*onyxcord.Command{
-		"verbs":        irregular_verbs.Command(),
-		"connect-four": connect_four.Command(),
-		"hangman":      hangman.Command(),
-		"tic-tac-toe":  tic_tac_toe.Command(),
-		"about":        commands.About(),
+		"verbs":   irregular_verbs.Command(),
+		"hangman": hangman.Command(),
+		"about":   commands.About(),
+
+		"connect-four":          connect_four.Command(),
+		"Défier au Puissance 4": connect_four.Command(),
+
+		"tic-tac-toe":       tic_tac_toe.Command(),
+		"Défier au morpion": tic_tac_toe.Command(),
 	}
 
 	bot.Components = map[string]onyxcord.Component{

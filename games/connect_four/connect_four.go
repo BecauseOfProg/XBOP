@@ -13,7 +13,22 @@ func Command() *onyxcord.Command {
 		ListenInPublic: true,
 		Execute: func(bot *onyxcord.Bot, interaction *discordgo.InteractionCreate) (err error) {
 			player1 := interaction.Member.User
-			player2 := interaction.ApplicationCommandData().Options[0].UserValue(bot.Client)
+			var player2 *discordgo.User
+			if interaction.ApplicationCommandData().TargetID != "" {
+				member, _ := bot.Client.GuildMember(interaction.GuildID, interaction.ApplicationCommandData().TargetID)
+				player2 = member.User
+			} else {
+				player2 = interaction.ApplicationCommandData().Options[0].UserValue(bot.Client)
+			}
+			if player2.Bot {
+				return bot.Client.InteractionRespond(interaction.Interaction, &discordgo.InteractionResponse{
+					Type: discordgo.InteractionResponseChannelMessageWithSource,
+					Data: &discordgo.InteractionResponseData{
+						Content: ":x: Vous ne pouvez pas jouer avec un robot (en plus c'est super glauque).",
+						Flags:   1 << 6,
+					},
+				})
+			}
 			return startGame(bot, interaction, player1, player2)
 		},
 	}
