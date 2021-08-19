@@ -12,14 +12,14 @@ import (
 func handleTurn(bot *onyxcord.Bot, interaction *discordgo.InteractionCreate, args []string, cacheID string) (err error) {
 	playingIndex := bot.Cache.HGet(context.Background(), cacheID, "playing").Val()
 	playingUserID := bot.Cache.HGet(context.Background(), cacheID, playingIndex).Val()
-	playingMember, _ := bot.Client.GuildMember(interaction.GuildID, playingUserID)
+	playingMember, _ := bot.GuildMember(interaction.GuildID, playingUserID)
 
 	waitingIndex := 1
 	if playingIndex == "1" {
 		waitingIndex = 2
 	}
 	waitingUserID := bot.Cache.HGet(context.Background(), cacheID, strconv.Itoa(waitingIndex)).Val()
-	waitingMember, _ := bot.Client.GuildMember(interaction.GuildID, waitingUserID)
+	waitingMember, _ := bot.GuildMember(interaction.GuildID, waitingUserID)
 
 	columns := bot.Cache.LRange(context.Background(), cacheID+"/columns", 0, -1).Val()
 
@@ -60,7 +60,7 @@ func handleTurn(bot *onyxcord.Bot, interaction *discordgo.InteractionCreate, arg
 }
 
 func editMessage(bot *onyxcord.Bot, interaction *discordgo.InteractionCreate, player *discordgo.Member, token int, columns []string) {
-	bot.Client.InteractionRespond(interaction.Interaction, &discordgo.InteractionResponse{
+	bot.InteractionRespond(interaction.Interaction, &discordgo.InteractionResponse{
 		Type: discordgo.InteractionResponseUpdateMessage,
 		Data: &discordgo.InteractionResponseData{
 			Content:    generateTurnMessage(player.User, token),

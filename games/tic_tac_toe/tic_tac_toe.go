@@ -15,13 +15,13 @@ func Command() *onyxcord.Command {
 			player1 := interaction.Member.User
 			var player2 *discordgo.User
 			if interaction.ApplicationCommandData().TargetID != "" {
-				member, _ := bot.Client.GuildMember(interaction.GuildID, interaction.ApplicationCommandData().TargetID)
+				member, _ := bot.GuildMember(interaction.GuildID, interaction.ApplicationCommandData().TargetID)
 				player2 = member.User
 			} else {
-				player2 = interaction.ApplicationCommandData().Options[0].UserValue(bot.Client)
+				player2 = interaction.ApplicationCommandData().Options[0].UserValue(bot.Session)
 			}
 			if player2.Bot {
-				return bot.Client.InteractionRespond(interaction.Interaction, &discordgo.InteractionResponse{
+				return bot.InteractionRespond(interaction.Interaction, &discordgo.InteractionResponse{
 					Type: discordgo.InteractionResponseChannelMessageWithSource,
 					Data: &discordgo.InteractionResponseData{
 						Content: ":x: Vous ne pouvez pas jouer avec un robot (en plus c'est super glauque).",
@@ -45,8 +45,8 @@ func HandleInteraction(bot *onyxcord.Bot, interaction *discordgo.InteractionCrea
 	}
 	switch args[0] {
 	case "restart":
-		player1, _ := bot.Client.GuildMember(interaction.GuildID, args[1])
-		player2, _ := bot.Client.GuildMember(interaction.GuildID, args[2])
+		player1, _ := bot.GuildMember(interaction.GuildID, args[1])
+		player2, _ := bot.GuildMember(interaction.GuildID, args[2])
 		if interaction.Member.User.ID != player1.User.ID && interaction.Member.User.ID != player2.User.ID {
 			return nil
 		}

@@ -22,7 +22,7 @@ func handleAnswer(bot *onyxcord.Bot, message *discordgo.Message, cacheID string)
 		successfulAnswers, _ := bot.Cache.HGet(context.Background(), cacheID, "successfulAnswers").Int()
 		answers, _ := bot.Cache.HGet(context.Background(), cacheID, "answers").Int()
 
-		bot.Client.ChannelMessageSend(
+		bot.ChannelMessageSend(
 			message.ChannelID,
 			fmt.Sprintf(
 				":stop_sign: **Arrêt du quiz en cours!** Vous avez réussi %d questions sur %d (note de %.2f/20)",
@@ -36,7 +36,7 @@ func handleAnswer(bot *onyxcord.Bot, message *discordgo.Message, cacheID string)
 	}
 
 	if lib.Contains(lib.SkipSentences, trial) {
-		bot.Client.ChannelMessageSend(
+		bot.ChannelMessageSend(
 			message.ChannelID,
 			fmt.Sprintf(":fast_forward: Le mot recherché était **%s**", verb),
 		)
@@ -45,13 +45,13 @@ func handleAnswer(bot *onyxcord.Bot, message *discordgo.Message, cacheID string)
 	}
 
 	if trial == lib.TrimNonLetters(verb) {
-		bot.Client.MessageReactionAdd(message.ChannelID, message.ID, "✅")
+		bot.MessageReactionAdd(message.ChannelID, message.ID, "✅")
 		if bot.Cache.HGet(context.Background(), cacheID, "succeeded").Val() == "true" {
 			bot.Cache.HIncrBy(context.Background(), cacheID, "successfulAnswers", 1)
 		}
 		sendQuestion(bot, message.ChannelID)
 	} else {
-		bot.Client.MessageReactionAdd(message.ChannelID, message.ID, "❌")
+		bot.MessageReactionAdd(message.ChannelID, message.ID, "❌")
 		bot.Cache.HSet(context.Background(), cacheID, "suceeded", "false")
 	}
 }

@@ -28,7 +28,7 @@ func sendQuestion(bot *onyxcord.Bot, channel string) {
 	bot.Cache.HIncrBy(context.Background(), cacheID, "answers", 1)
 	bot.Cache.HSet(context.Background(), cacheID, "succeeded", "true")
 
-	bot.Client.ChannelMessageSend(
+	bot.ChannelMessageSend(
 		channel,
 		fmt.Sprintf(
 			"**#%s** `%s` - Indiquer %s",

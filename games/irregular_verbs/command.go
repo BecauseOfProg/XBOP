@@ -27,7 +27,7 @@ func Command() *onyxcord.Command {
 				part = options[0].StringValue()
 			}
 
-			err = bot.Client.InteractionRespond(interaction.Interaction, &discordgo.InteractionResponse{
+			err = bot.InteractionRespond(interaction.Interaction, &discordgo.InteractionResponse{
 				Type: discordgo.InteractionResponseChannelMessageWithSource,
 				Data: &discordgo.InteractionResponseData{
 					Content: fmt.Sprintf(

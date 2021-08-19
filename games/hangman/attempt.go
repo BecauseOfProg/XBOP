@@ -16,7 +16,7 @@ func handleAttempt(bot *onyxcord.Bot, message *discordgo.Message, cacheID string
 	word := bot.Cache.HGet(context.Background(), cacheID, "word").Val()
 
 	attemptLetter := strings.ToUpper(string(message.Content[0]))
-	_ = bot.Client.ChannelMessageDelete(message.ChannelID, message.ID)
+	_ = bot.ChannelMessageDelete(message.ChannelID, message.ID)
 
 	letters := bot.Cache.HGet(context.Background(), cacheID, "letters").Val()
 	wrongLetters := bot.Cache.HGet(context.Background(), cacheID, "wrongLetters").Val()

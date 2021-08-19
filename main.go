@@ -13,7 +13,8 @@ import (
 
 func main() {
 	bot := onyxcord.RegisterBot("XBOP")
-	bot.Commands = map[string]*onyxcord.Command{
+	bot.ApplicationCommands = discordCommands()
+	bot.CommandHandlers = map[string]*onyxcord.Command{
 		"verbs":   irregular_verbs.Command(),
 		"hangman": hangman.Command(),
 		"about":   commands.About(),
@@ -25,18 +26,17 @@ func main() {
 		"Défier au morpion": tic_tac_toe.Command(),
 	}
 
-	bot.Components = map[string]onyxcord.Component{
+	bot.ComponentHandlers = map[string]onyxcord.Component{
 		"connectfour": connect_four.HandleOngoingGame,
 		"hangman":     hangman.HandleInteraction,
 		"tictactoe":   tic_tac_toe.HandleInteraction,
 	}
 
-	bot.Client.AddHandler(func(session *discordgo.Session, message *discordgo.MessageCreate) {
+	bot.AddHandler(func(session *discordgo.Session, message *discordgo.MessageCreate) {
 		_ = hangman.HandleMessage(&bot, message.Message)
 		irregular_verbs.HandleOngoingGame(&bot, message.Message)
 	})
 
-	bot.Client.Identify.Intents = discordgo.MakeIntent(discordgo.IntentsGuildMessages | discordgo.IntentsDirectMessages)
-
-	bot.Run(true)
+	bot.Identify.Intents = discordgo.MakeIntent(discordgo.IntentsGuildMessages | discordgo.IntentsDirectMessages)
+	bot.Start()
 }

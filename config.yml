@@ -4,8 +4,10 @@ dev:
   maintainer:
     name: Théo Vidal
     link: https://github.com/theovidal
+  register_handler: true
 bot:
   name: XBOP
+  app_id: 796457702666534972
   id: 796457702666534972
   illustration: https://cdn.discordapp.com/app-icons/796457702666534972/88a99cba60ccf586d54a1d38f450e8f9.png?size=256
   website: https://github.com/BecauseOfProg/XBOP

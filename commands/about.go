@@ -12,7 +12,7 @@ func About() *onyxcord.Command {
 		ListenInPublic: true,
 		ListenInDM:     true,
 		Execute: func(bot *onyxcord.Bot, interaction *discordgo.InteractionCreate) (err error) {
-			return bot.Client.InteractionRespond(interaction.Interaction, &discordgo.InteractionResponse{
+			return bot.InteractionRespond(interaction.Interaction, &discordgo.InteractionResponse{
 				Type: discordgo.InteractionResponseChannelMessageWithSource,
 				Data: &discordgo.InteractionResponseData{
 					Embeds: []*discordgo.MessageEmbed{

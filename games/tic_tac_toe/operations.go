@@ -15,7 +15,7 @@ func startGame(bot *onyxcord.Bot, interaction *discordgo.InteractionCreate, play
 		bot.Cache.LPush(context.Background(), "tictactoe:"+interaction.ChannelID+"/columns", "000")
 	}
 
-	err = bot.Client.InteractionRespond(interaction.Interaction, &discordgo.InteractionResponse{
+	err = bot.InteractionRespond(interaction.Interaction, &discordgo.InteractionResponse{
 		Type: discordgo.InteractionResponseChannelMessageWithSource,
 		Data: &discordgo.InteractionResponseData{
 			Content:    generateTurnMessage(player1, 1),
@@ -61,7 +61,7 @@ func stopGame(bot *onyxcord.Bot, interaction *discordgo.InteractionCreate, reaso
 
 	bot.Cache.Del(context.Background(), cacheID, cacheID+"/columns")
 
-	return bot.Client.InteractionRespond(interaction.Interaction, &discordgo.InteractionResponse{
+	return bot.InteractionRespond(interaction.Interaction, &discordgo.InteractionResponse{
 		Type: discordgo.InteractionResponseUpdateMessage,
 		Data: &discordgo.InteractionResponseData{
 			Content:    fmt.Sprintf("**%s**", reason),

@@ -77,12 +77,12 @@ func editMessage(bot *onyxcord.Bot, interaction *discordgo.InteractionCreate, ch
 	}
 
 	if interaction == nil {
-		_, err = bot.Client.InteractionResponseEdit(bot.Config.Bot.ID, &discordgo.Interaction{Token: token}, &discordgo.WebhookEdit{
+		_, err = bot.InteractionResponseEdit(bot.Config.Bot.ID, &discordgo.Interaction{Token: token}, &discordgo.WebhookEdit{
 			Content:    formatMessage(word, letters, wrongLetters, maxErrors, message),
 			Components: components,
 		})
 	} else {
-		err = bot.Client.InteractionRespond(interaction.Interaction, &discordgo.InteractionResponse{
+		err = bot.InteractionRespond(interaction.Interaction, &discordgo.InteractionResponse{
 			Type: discordgo.InteractionResponseUpdateMessage,
 			Data: &discordgo.InteractionResponseData{
 				Content:    formatMessage(word, letters, wrongLetters, maxErrors, message),

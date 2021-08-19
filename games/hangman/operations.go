@@ -16,7 +16,7 @@ func startGame(bot *onyxcord.Bot, interaction *discordgo.InteractionCreate, maxE
 
 	letters := string(word[0])
 
-	_ = bot.Client.InteractionRespond(interaction.Interaction, &discordgo.InteractionResponse{
+	_ = bot.InteractionRespond(interaction.Interaction, &discordgo.InteractionResponse{
 		Type: discordgo.InteractionResponseChannelMessageWithSource,
 		Data: &discordgo.InteractionResponseData{
 			Content:    formatMessage(word, letters, "", maxErrors, ""),
