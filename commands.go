@@ -57,7 +57,12 @@ func discordCommands() []*discordgo.ApplicationCommand {
 				{
 					Type:        discordgo.ApplicationCommandOptionInteger,
 					Name:        "max-errors",
-					Description: "Nombre maximum d'erreurs autorisées",
+					Description: "Nombre maximum d'erreurs autorisées (99 maximum)",
+				},
+				{
+					Type:        discordgo.ApplicationCommandOptionString,
+					Name:        "word",
+					Description: "Mot spéficique à utiliser pour cette partie (100 caractères maximum)",
 				},
 			},
 		},

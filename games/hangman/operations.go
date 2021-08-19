@@ -2,6 +2,7 @@ package hangman
 
 import (
 	"context"
+	"github.com/BecauseOfProg/xbop/lib"
 	"math/rand"
 	"strings"
 	"time"
@@ -10,9 +11,33 @@ import (
 	"github.com/theovidal/onyxcord"
 )
 
-func startGame(bot *onyxcord.Bot, interaction *discordgo.InteractionCreate, maxErrors int) (err error) {
+func startGame(bot *onyxcord.Bot, interaction *discordgo.InteractionCreate, word string, maxErrors int) (err error) {
+	if maxErrors > 99 {
+		return bot.InteractionRespond(interaction.Interaction, &discordgo.InteractionResponse{
+			Type: discordgo.InteractionResponseChannelMessageWithSource,
+			Data: &discordgo.InteractionResponseData{
+				Content: ":x: Le nombre maximum d'erreurs autorisées est de 99.",
+				Flags:   1 << 6,
+			},
+		})
+	}
+
 	rand.Seed(time.Now().UnixNano())
-	word := strings.TrimRight(words[rand.Intn(len(words))], "\r")
+	if word == "" {
+		word = strings.TrimRight(words[rand.Intn(len(words))], "\r")
+	}
+
+	word = strings.ToUpper(lib.TrimNonLetters(word))
+
+	if len(word) > 100 {
+		return bot.InteractionRespond(interaction.Interaction, &discordgo.InteractionResponse{
+			Type: discordgo.InteractionResponseChannelMessageWithSource,
+			Data: &discordgo.InteractionResponseData{
+				Content: ":x: Votre mot ne peut dépasser les 100 caractères.",
+				Flags:   1 << 6,
+			},
+		})
+	}
 
 	letters := string(word[0])
 

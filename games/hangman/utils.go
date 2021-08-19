@@ -41,14 +41,14 @@ func stopButton() []discordgo.MessageComponent {
 	}
 }
 
-const defaultMessage = "**:chains: Un jeu du pendu est en cours dans le salon!**\nTous les utilisateurs ayant accès au salon peuvent participer. Pour que votre message ne soit pas compté, précédez-le d'un point d'exclamation `!`.\n*La partie est valable pendant 15 minutes après son lancement.*"
+const defaultMessage = "**⛓ Un jeu du pendu est en cours dans le salon!**\nTous les utilisateurs ayant accès au salon peuvent participer. Pour que votre message ne soit pas compté, précédez-le d'un point d'exclamation `!`.\n*La partie est valable pendant 15 minutes après son lancement.*"
 
 func formatMessage(word, letters, wrongLetters string, maxErrors int, message string) string {
 	if message == "" {
 		message = defaultMessage
 	}
 
-	format := fmt.Sprintf("%s\n\n:arrow_forward: `%s`\nErreurs restantes : %d", message, hideWord(word, letters), maxErrors-len(wrongLetters))
+	format := fmt.Sprintf("%s\n\n▶ `%s`\nErreurs restantes : %d", message, hideWord(word, letters), maxErrors-len(wrongLetters))
 	if wrongLetters != "" {
 		format += fmt.Sprintf("\nUtilisées : %s", wrongLetters)
 	}

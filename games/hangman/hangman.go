@@ -15,11 +15,20 @@ func Command() *onyxcord.Command {
 		ListenInDM:     true,
 		Execute: func(bot *onyxcord.Bot, interaction *discordgo.InteractionCreate) (err error) {
 			maxErrors := 7
-			if options := interaction.ApplicationCommandData().Options; len(options) != 0 {
-				maxErrors = int(options[0].IntValue())
+			word := ""
+			options := interaction.ApplicationCommandData().Options
+			if len(options) > 0 {
+				if options[0].Name == "max-errors" {
+					maxErrors = int(options[0].IntValue())
+				} else {
+					word = options[0].StringValue()
+				}
+			}
+			if len(options) > 1 {
+				word = options[1].StringValue()
 			}
 
-			return startGame(bot, interaction, maxErrors)
+			return startGame(bot, interaction, word, maxErrors)
 		},
 	}
 }
@@ -44,7 +53,7 @@ func HandleInteraction(bot *onyxcord.Bot, interaction *discordgo.InteractionCrea
 		if maxErrors, convErr := strconv.Atoi(args[1]); convErr != nil {
 			return convErr
 		} else {
-			return startGame(bot, interaction, maxErrors)
+			return startGame(bot, interaction, "", maxErrors)
 		}
 	}
 	return
