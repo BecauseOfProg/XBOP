@@ -4,9 +4,13 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/bwmarrin/discordgo"
 )
+
+// Duration for the game to automatically stop if nobody interacts
+const expireTime = time.Minute * 5
 
 var tokens = []string{":white_large_square:", ":red_circle:", ":yellow_circle:"}
 

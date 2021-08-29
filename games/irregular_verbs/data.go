@@ -4,7 +4,11 @@ import (
 	"encoding/csv"
 	"log"
 	"os"
+	"time"
 )
+
+// Duration in seconds for the game to automatically stop if nobody interacts
+const expireTime = time.Minute * 10
 
 var categories = []string{"la **base verbale**", "le **prétérit**", "le **participe passé**", "la **traduction**"}
 

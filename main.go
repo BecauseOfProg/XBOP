@@ -37,6 +37,7 @@ func main() {
 		irregular_verbs.HandleOngoingGame(&bot, message.Message)
 	})
 
+	go subscribe(&bot)
 	bot.Identify.Intents = discordgo.MakeIntent(discordgo.IntentsGuildMessages | discordgo.IntentsDirectMessages)
 	bot.Start()
 }

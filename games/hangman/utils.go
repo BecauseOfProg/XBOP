@@ -7,10 +7,14 @@ import (
 	"log"
 	"regexp"
 	"strings"
+	"time"
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/theovidal/onyxcord"
 )
+
+// Duration in seconds for the game to automatically stop if nobody interacts
+const availableTime = time.Minute * 15
 
 var words = openWords()
 

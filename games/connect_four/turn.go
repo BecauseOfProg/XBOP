@@ -11,6 +11,7 @@ import (
 )
 
 func handleTurn(bot *onyxcord.Bot, interaction *discordgo.InteractionCreate, cacheID string, args []string) (err error) {
+	bot.Cache.Expire(context.Background(), cacheID, expireTime)
 	playingIndex := bot.Cache.HGet(context.Background(), cacheID, "playing").Val()
 	playingUserID := bot.Cache.HGet(context.Background(), cacheID, playingIndex).Val()
 	playingMember, _ := bot.GuildMember(interaction.GuildID, playingUserID)

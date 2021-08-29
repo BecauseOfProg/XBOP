@@ -14,6 +14,7 @@ func handleAnswer(bot *onyxcord.Bot, message *discordgo.Message, cacheID string)
 	if message.Author.Bot {
 		return
 	}
+	bot.Cache.Expire(context.Background(), cacheID, expireTime)
 	trial := lib.TrimNonLetters(message.Content)
 	verb := bot.Cache.HGet(context.Background(), cacheID, "verb").Val()
 

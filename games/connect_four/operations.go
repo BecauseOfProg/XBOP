@@ -31,6 +31,7 @@ func startGame(bot *onyxcord.Bot, interaction *discordgo.InteractionCreate, play
 		"2", player2.ID,
 		"playing", "1",
 	)
+	bot.Cache.Expire(context.Background(), "connectfour:"+interaction.ChannelID, expireTime)
 
 	return
 }

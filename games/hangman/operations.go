@@ -2,11 +2,11 @@ package hangman
 
 import (
 	"context"
-	"github.com/BecauseOfProg/xbop/lib"
 	"math/rand"
 	"strings"
 	"time"
 
+	"github.com/BecauseOfProg/xbop/lib"
 	"github.com/bwmarrin/discordgo"
 	"github.com/theovidal/onyxcord"
 )
@@ -56,6 +56,7 @@ func startGame(bot *onyxcord.Bot, interaction *discordgo.InteractionCreate, word
 		"maxErrors", maxErrors,
 		"game", interaction.Token,
 	)
+	bot.Cache.Expire(context.Background(), "hangman:"+interaction.ChannelID, availableTime)
 
 	return
 }

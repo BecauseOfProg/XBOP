@@ -32,6 +32,7 @@ func startGame(bot *onyxcord.Bot, interaction *discordgo.InteractionCreate, play
 		"playing", "1",
 		"turn", 1,
 	)
+	bot.Cache.Expire(context.Background(), "tictactoe:"+interaction.ChannelID, expireTime)
 
 	return
 }
